@@ -249,17 +249,20 @@
     document.getElementById('tb-stand').onclick = () => commitDecision('stand');
   }
 
+  // Dealer-perspective button order: BANKER (left) | TIE (centre) | PLAYER (right)
+  // This matches the table layout — Banker seat is on the dealer's left.
   function renderWinnerBtns() {
     ctrlsEl.innerHTML =
       `<div class="t-ctrl-3">
-        <button class="t-btn t-btn--player" id="tb-player">Player</button>
-        <button class="t-btn t-btn--tie"    id="tb-tie">Tie</button>
         <button class="t-btn t-btn--banker" id="tb-banker">Banker</button>
+        <button class="t-btn t-btn--tie"    id="tb-tie">Tie</button>
+        <button class="t-btn t-btn--player" id="tb-player">Player</button>
       </div>`;
-    document.getElementById('tb-player').onclick = () => commitWinner('player');
-    document.getElementById('tb-tie').onclick    = () => commitWinner('tie');
     document.getElementById('tb-banker').onclick = () => commitWinner('banker');
+    document.getElementById('tb-tie').onclick    = () => commitWinner('tie');
+    document.getElementById('tb-player').onclick = () => commitWinner('player');
   }
+
 
   /* ==================================================================
    * Progress bar + timer
