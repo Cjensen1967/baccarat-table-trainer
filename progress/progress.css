@@ -1,0 +1,387 @@
+/* =====================================================================
+ * progress.css — Stats / Progress dashboard.
+ * =================================================================== */
+
+:root { color-scheme: dark; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  min-height: 100dvh;
+  background:
+    radial-gradient(ellipse 90% 55% at 50% 0%,
+      rgba(17, 60, 36, 0.5) 0%,
+      rgba(6, 11, 8, 1) 60%);
+  color: var(--cream);
+  font-family: var(--font-ui);
+}
+
+.pg-app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+/* ---- Header --------------------------------------------------------- */
+.pg-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.7rem 0.9rem;
+  background: rgba(6, 11, 8, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+}
+
+.pg-header__titles { flex: 1; min-width: 0; }
+
+.pg-title {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold-300);
+  line-height: 1;
+}
+
+.pg-subtitle {
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  margin-top: 0.18rem;
+}
+
+.pg-reset-all-btn {
+  color: var(--muted);
+  transition: color var(--t-fast) var(--ease);
+}
+.pg-reset-all-btn:hover { color: var(--incorrect); }
+
+/* ---- Body ----------------------------------------------------------- */
+.pg-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem 0.9rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+/* ---- Overall ring --------------------------------------------------- */
+.pg-overall {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+}
+
+.pg-ring-wrap {
+  position: relative;
+  width: clamp(130px, 32vw, 170px);
+  height: clamp(130px, 32vw, 170px);
+}
+
+.pg-ring {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.pg-ring__track {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.06);
+  stroke-width: 10;
+}
+
+.pg-ring__fill {
+  fill: none;
+  stroke: var(--gold-400);
+  stroke-width: 10;
+  stroke-linecap: round;
+  /* circumference ≈ 364.4  (2π × 58) */
+  stroke-dasharray: 364.4;
+  stroke-dashoffset: 364.4; /* starts empty, updated by JS */
+  transition: stroke-dashoffset 0.9s cubic-bezier(0.4, 0, 0.2, 1),
+              stroke 0.4s var(--ease);
+}
+
+.pg-ring__center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.1rem;
+}
+
+.pg-ring__pct {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 5vw, 2.2rem);
+  color: var(--gold-300);
+  line-height: 1;
+  letter-spacing: 0.03em;
+}
+
+.pg-ring__lbl {
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.pg-overall__counts {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.pg-stat-pill {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.05rem;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 0.4em 0.9em;
+  min-width: 80px;
+}
+
+.pg-stat-pill__val {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  color: var(--cream);
+  letter-spacing: 0.04em;
+}
+
+.pg-stat-pill__key {
+  font-size: 0.63rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ---- Module grid ---------------------------------------------------- */
+.pg-module-hd {
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 0.35rem;
+  margin-bottom: 0.6rem;
+}
+
+.pg-module-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.55rem;
+}
+
+@media (min-width: 520px) {
+  .pg-module-row { grid-template-columns: 1fr 1fr 1fr 1fr; }
+}
+
+/* Module card */
+.pg-mod {
+  background: rgba(0, 0, 0, 0.38);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 0.8rem 0.75rem 0.65rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  transition: border-color var(--t-fast) var(--ease);
+}
+
+.pg-mod--empty { opacity: 0.45; }
+
+.pg-mod__icon {
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+.pg-mod__name {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cream-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pg-mod__accuracy {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--gold-300);
+  letter-spacing: 0.03em;
+  line-height: 1;
+}
+
+.pg-mod__accuracy.pg-acc--good  { color: var(--correct); }
+.pg-mod__accuracy.pg-acc--low   { color: var(--incorrect); }
+
+.pg-mod__meta {
+  font-size: 0.7rem;
+  color: var(--muted);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.6rem;
+}
+
+/* Streak badge */
+.pg-streak {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+  background: rgba(212,175,55,0.1);
+  border: 1px solid rgba(212,175,55,0.3);
+  border-radius: 999px;
+  padding: 0.12em 0.5em;
+  font-size: 0.68rem;
+  color: var(--gold-400);
+  white-space: nowrap;
+}
+
+/* ---- Mini bar -------------------------------------------------------- */
+.pg-bar {
+  height: 3px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 0.3rem;
+}
+
+.pg-bar__fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--gold-500), var(--gold-300));
+  transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* ---- Missed hands link ---------------------------------------------- */
+.pg-missed-link {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 0.7rem 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  text-decoration: none;
+  transition: border-color var(--t-fast) var(--ease);
+}
+
+.pg-missed-link a {
+  color: inherit;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  width: 100%;
+}
+
+.pg-missed-link:hover, .pg-missed-link a:hover { border-color: var(--gold-500); }
+
+.pg-missed-link__icon { font-size: 1.3rem; }
+
+.pg-missed-link__text { flex: 1; }
+
+.pg-missed-link__label {
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cream-dim);
+  display: block;
+}
+
+.pg-missed-link__count {
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.pg-missed-link__arrow { color: var(--muted); font-size: 0.8rem; }
+
+/* ---- Confirm overlay ------------------------------------------------ */
+.pg-confirm {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.72);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 1rem;
+  animation: fadeIn 0.18s var(--ease);
+}
+
+.pg-confirm__box {
+  background: var(--ink-800);
+  border: 1px solid var(--gold-glow);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 1.5rem 1.2rem;
+  max-width: 340px;
+  width: 100%;
+  text-align: center;
+  animation: sr-pop 0.22s var(--ease);
+}
+
+.pg-confirm__box h3 {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold-300);
+  margin-bottom: 0.5rem;
+}
+
+.pg-confirm__box p {
+  font-size: 0.84rem;
+  color: var(--cream-dim);
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.pg-confirm__actions { display: flex; gap: 0.6rem; }
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ---- No data state -------------------------------------------------- */
+.pg-empty {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.pg-empty__icon { font-size: 2.2rem; opacity: 0.4; }
+
+.pg-empty__msg {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  color: var(--cream-dim);
+}
+
+.pg-empty__hint {
+  font-size: 0.82rem;
+  color: var(--muted);
+  line-height: 1.55;
+  max-width: 280px;
+}

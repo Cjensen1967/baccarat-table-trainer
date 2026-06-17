@@ -489,9 +489,29 @@
     stopTimer();
     pbarFill.style.width = '100%';
 
+    // Write cumulative stats to localStorage so Progress module can read them
+    writeTestStats();
+
     setPhase('results');
     buildResults();
   }
+
+  function writeTestStats() {
+    try {
+      const KEY = 'bac_stats_test';
+      const prev = JSON.parse(localStorage.getItem(KEY) || '{}');
+      const data = {
+        correct:     (prev.correct   || 0) + state.decCorrect,
+        incorrect:   (prev.incorrect || 0) + (state.decTotal - state.decCorrect),
+        hands:       (prev.hands     || 0) + state.handsTotal,
+        streak:      0,   // not tracked per-session in test mode
+        bestStreak:  prev.bestStreak || 0,
+        peeks:       prev.peeks || 0
+      };
+      localStorage.setItem(KEY, JSON.stringify(data));
+    } catch (e) { /* storage unavailable */ }
+  }
+
 
   function pct(correct, total) {
     return total ? Math.round((correct / total) * 100) : 0;

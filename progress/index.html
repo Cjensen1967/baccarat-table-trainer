@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, shrink-to-fit=no" />
+  <title>Progress · Baccarat Table Trainer</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="../css/variables.css" />
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="progress.css" />
+  <script src="../js/core/gate.js"></script>
+</head>
+<body>
+  <div class="pg-app">
+
+    <!-- Header -->
+    <header class="pg-header">
+      <a class="icon-btn" href="../index.html" aria-label="Back to menu">
+        <i class="fas fa-arrow-left"></i>
+      </a>
+      <div class="pg-header__titles">
+        <h1 class="pg-title">Progress</h1>
+        <p class="pg-subtitle" id="pg-subtitle">Loading…</p>
+      </div>
+      <button class="icon-btn pg-reset-all-btn" id="pg-reset-all-btn" title="Reset all stats">
+        <i class="fas fa-rotate-left"></i>
+      </button>
+    </header>
+
+    <div class="pg-body" id="pg-body">
+
+      <!-- Overall ring -->
+      <section class="pg-overall" id="pg-overall">
+        <div class="pg-ring-wrap">
+          <svg class="pg-ring" viewBox="0 0 140 140" aria-hidden="true">
+            <circle class="pg-ring__track" cx="70" cy="70" r="58"/>
+            <circle class="pg-ring__fill"  cx="70" cy="70" r="58" id="pg-ring-fill"/>
+          </svg>
+          <div class="pg-ring__center">
+            <span class="pg-ring__pct" id="pg-ring-pct">–</span>
+            <span class="pg-ring__lbl">overall</span>
+          </div>
+        </div>
+        <div class="pg-overall__counts" id="pg-overall-counts"></div>
+      </section>
+
+      <!-- Per-module breakdown -->
+      <section class="pg-modules" id="pg-modules" aria-label="Module stats"></section>
+
+      <!-- Missed hands quick-link -->
+      <section class="pg-missed-link" id="pg-missed-link"></section>
+
+    </div><!-- .pg-body -->
+
+    <!-- Confirm reset overlay (injected by JS) -->
+  </div>
+
+  <script src="progress.js"></script>
+</body>
+</html>

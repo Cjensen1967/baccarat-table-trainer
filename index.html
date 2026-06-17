@@ -100,10 +100,12 @@
       },
 
       {
-        id: 'progress', live: false, level: 'Stats', icon: '📊',
+        id: 'progress', live: true, level: 'Stats', icon: '📊',
         title: 'Progress', accent: 'var(--gold-500)',
-        desc: 'Track accuracy and streaks across every mode. Coming soon.'
+        desc: 'Overall accuracy ring, per-mode breakdown, best streaks, and a quick link to your missed hands.',
+        href: 'progress/index.html', statsKey: 'bac_stats_guided'
       }
+
     ];
 
     function readStat(key) {
@@ -119,8 +121,24 @@
 
     function statLine(m) {
       if (!m.live) return '<div class="module-card__stat">Not yet available</div>';
+      // Progress card: show combined accuracy across all modes
+      if (m.id === 'progress') {
+        try {
+          const keys = ['bac_stats_guided','bac_stats_dealing','bac_stats_drill','bac_stats_test'];
+          let c = 0, t = 0, h = 0;
+          keys.forEach(k => {
+            const raw = localStorage.getItem(k);
+            if (!raw) return;
+            const d = JSON.parse(raw);
+            c += d.correct || 0; t += (d.correct||0)+(d.incorrect||0); h += d.hands||0;
+          });
+          if (t === 0) return '<div class="module-card__stat">No training data yet</div>';
+          return `<div class="module-card__stat"><b>${h}</b> hands · <b>${Math.round(c/t*100)}%</b> overall accuracy</div>`;
+        } catch(e) { return '<div class="module-card__stat">Tap to view stats</div>'; }
+      }
       // Review card: show live count of accumulated missed hands
       if (m.id === 'review') {
+
         try {
           const arr = JSON.parse(localStorage.getItem('bac_missed_hands') || '[]');
           if (arr.length === 0) return '<div class="module-card__stat">No mistakes on record yet</div>';
