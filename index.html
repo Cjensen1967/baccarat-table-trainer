@@ -93,10 +93,12 @@
       },
 
       {
-        id: 'review', live: false, level: 'Review', icon: '🔁',
+        id: 'review', live: true, level: 'Review', icon: '🔁',
         title: 'Missed Hands', accent: 'var(--gold-500)',
-        desc: 'Replay and study the hands you got wrong. Coming soon.'
+        desc: 'Study every hand you got wrong, across all modes. See the cards, your mistake, and the rule — filterable by module.',
+        href: 'review/index.html'
       },
+
       {
         id: 'progress', live: false, level: 'Stats', icon: '📊',
         title: 'Progress', accent: 'var(--gold-500)',
@@ -117,10 +119,19 @@
 
     function statLine(m) {
       if (!m.live) return '<div class="module-card__stat">Not yet available</div>';
+      // Review card: show live count of accumulated missed hands
+      if (m.id === 'review') {
+        try {
+          const arr = JSON.parse(localStorage.getItem('bac_missed_hands') || '[]');
+          if (arr.length === 0) return '<div class="module-card__stat">No mistakes on record yet</div>';
+          return `<div class="module-card__stat"><b>${arr.length}</b> missed hand${arr.length !== 1 ? 's' : ''} waiting to review</div>`;
+        } catch(e) { return '<div class="module-card__stat">Tap to review</div>'; }
+      }
       const s = readStat(m.statsKey);
       if (!s || s.hands === 0) return '<div class="module-card__stat">No sessions yet — start training</div>';
       return `<div class="module-card__stat"><b>${s.hands}</b> hands · <b>${s.rate}%</b> accuracy</div>`;
     }
+
 
     function render() {
       const grid = document.getElementById('modules');

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, shrink-to-fit=no" />
+  <title>Missed Hands · Baccarat Table Trainer</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="../css/variables.css" />
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="review.css" />
+  <script src="../js/core/gate.js"></script>
+</head>
+<body>
+  <div class="rv-app">
+
+    <!-- Header -->
+    <header class="rv-header">
+      <a class="icon-btn" href="../index.html" aria-label="Back to menu">
+        <i class="fas fa-arrow-left"></i>
+      </a>
+      <div class="rv-header__titles">
+        <h1 class="rv-title">Missed Hands</h1>
+        <p class="rv-subtitle" id="rv-subtitle">Loading…</p>
+      </div>
+      <button class="icon-btn rv-clear-btn" id="rv-clear-btn" title="Clear all missed hands">
+        <i class="fas fa-trash-can"></i>
+      </button>
+    </header>
+
+    <!-- Filter bar -->
+    <div class="rv-filter-bar" id="rv-filter-bar">
+      <button class="rv-filter-btn rv-filter-btn--active" data-src="all">All</button>
+      <button class="rv-filter-btn" data-src="test">Assessment</button>
+      <button class="rv-filter-btn" data-src="dealing">Dealing</button>
+      <button class="rv-filter-btn" data-src="guided">Guided</button>
+      <button class="rv-filter-btn" data-src="drill">Drill</button>
+    </div>
+
+    <!-- List -->
+    <main class="rv-list" id="rv-list"></main>
+
+    <!-- Empty state -->
+    <div class="rv-empty" id="rv-empty" hidden>
+      <i class="fas fa-circle-check rv-empty__icon"></i>
+      <p class="rv-empty__msg">No missed hands to review!</p>
+      <p class="rv-empty__hint">Mistakes from Assessment, Dealing, and Guided sessions will appear here.</p>
+      <a class="btn btn--gold" href="../index.html">Back to Training</a>
+    </div>
+
+  </div>
+
+  <script src="review.js"></script>
+</body>
+</html>

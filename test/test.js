@@ -107,6 +107,22 @@
   }
 
   /* ==================================================================
+   * Persist missed hands for the Review module.
+   * Key: 'bac_missed_hands'  (shared across all training modules)
+   * Capped at 300 entries, newest first.
+   * ================================================================== */
+  function saveMissedHand(entry) {
+    try {
+      const KEY = 'bac_missed_hands';
+      const arr = JSON.parse(localStorage.getItem(KEY) || '[]');
+      arr.unshift(entry);
+      if (arr.length > 300) arr.length = 300;
+      localStorage.setItem(KEY, JSON.stringify(arr));
+    } catch (e) { /* storage unavailable — silently skip */ }
+  }
+
+
+  /* ==================================================================
    * State
    * ================================================================== */
 
@@ -423,7 +439,30 @@
     state.handsTotal++;
     if (handAllCorrect) state.handsCorrect++;
 
+    // Persist wrong hands so the Review module can show them
+    if (!handAllCorrect) {
+      saveMissedHand({
+        id: Date.now() + '-' + Math.random().toString(36).slice(2),
+        source: 'test',
+        ts: Date.now(),
+        pCards: [state.pC1, state.pC2, state.pC3].filter(Boolean)
+          .map(c => ({ img: c.imagePath, d: c.display })),
+        bCards: [state.bC1, state.bC2, state.bC3].filter(Boolean)
+          .map(c => ({ img: c.imagePath, d: c.display })),
+        pFinal,
+        bFinal,
+        natural: state.natural,
+        errors: state.handLog.filter(d => !d.wasCorrect).map(d => ({
+          step:     d.step,
+          choice:   d.choice,
+          correct:  d.correct,
+          ruleText: d.ruleText
+        }))
+      });
+    }
+
     state.history.push({
+
       handNum: state.handNum,
       pC1: state.pC1, pC2: state.pC2, pC3: state.pC3,
       bC1: state.bC1, bC2: state.bC2, bC3: state.bC3,

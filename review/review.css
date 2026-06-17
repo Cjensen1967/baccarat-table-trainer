@@ -1,0 +1,354 @@
+/* =====================================================================
+ * review.css — Missed Hands review module.
+ *
+ * A scrollable study list, not a felt layout. Shows persistent missed
+ * hands collected from all live modules (Assessment, Dealing, Guided).
+ * Filter bar lets the trainee drill into mistakes from a specific mode.
+ * =================================================================== */
+
+:root { color-scheme: dark; }
+
+*,
+*::before,
+*::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  min-height: 100dvh;
+  background:
+    radial-gradient(ellipse 90% 55% at 50% 0%,
+      rgba(17, 60, 36, 0.5) 0%,
+      rgba(6, 11, 8, 1) 60%);
+  color: var(--cream);
+  font-family: var(--font-ui);
+}
+
+.rv-app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: env(safe-area-inset-top, 0) env(safe-area-inset-right, 0)
+           env(safe-area-inset-bottom, 0) env(safe-area-inset-left, 0);
+}
+
+/* ---- Header --------------------------------------------------------- */
+.rv-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.7rem 0.9rem;
+  background: rgba(6, 11, 8, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+}
+
+.rv-header__titles {
+  flex: 1;
+  min-width: 0;
+}
+
+.rv-title {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold-300);
+  line-height: 1;
+}
+
+.rv-subtitle {
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  margin-top: 0.18rem;
+}
+
+.rv-clear-btn {
+  color: var(--muted);
+  transition: color var(--t-fast) var(--ease);
+}
+
+.rv-clear-btn:hover { color: var(--incorrect); }
+
+/* ---- Filter bar ----------------------------------------------------- */
+.rv-filter-bar {
+  display: flex;
+  gap: 0.4rem;
+  padding: 0.55rem 0.9rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-bottom: 1px solid var(--line);
+  background: rgba(0, 0, 0, 0.22);
+  flex-shrink: 0;
+}
+
+.rv-filter-bar::-webkit-scrollbar { display: none; }
+
+.rv-filter-btn {
+  white-space: nowrap;
+  padding: 0.25em 0.8em;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--cream-dim);
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: border-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease),
+              background var(--t-fast) var(--ease);
+}
+
+.rv-filter-btn:hover { border-color: var(--gold-500); color: var(--cream); }
+
+.rv-filter-btn--active {
+  border-color: var(--gold-400);
+  background: rgba(212, 175, 55, 0.12);
+  color: var(--gold-400);
+}
+
+/* ---- List ----------------------------------------------------------- */
+.rv-list {
+  flex: 1;
+  padding: 0.8rem 0.9rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ---- Missed-hand card ----------------------------------------------- */
+.rv-card {
+  background: rgba(0, 0, 0, 0.38);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 0.8rem 0.9rem;
+  margin-bottom: 0.65rem;
+  animation: sr-pop 0.24s var(--ease);
+}
+
+/* Meta row: source badge + timestamp */
+.rv-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
+}
+
+.rv-card__src {
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.15em 0.65em;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+}
+
+.rv-src--test     { color: var(--gold-400);   border-color: rgba(212,175,55,0.4); }
+.rv-src--dealing  { color: #f3c9cf;            border-color: rgba(138,39,52,0.5); }
+.rv-src--guided   { color: #cfe0f3;            border-color: rgba(42,94,148,0.5); }
+.rv-src--drill    { color: var(--cream-dim);   border-color: var(--line); }
+
+.rv-card__time {
+  font-size: 0.7rem;
+  color: var(--muted);
+  margin-left: auto;
+}
+
+/* Mini table: Banker(left) | Player(right) — dealer perspective */
+.rv-card__table {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-end;
+  padding: 0.2rem 0 0.55rem;
+}
+
+.rv-mini-hand {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.rv-mini-label {
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  min-width: 1.2em;
+}
+
+.rv-mini-hand--banker .rv-mini-label { color: #f3c9cf; }
+.rv-mini-hand--player .rv-mini-label { color: #cfe0f3; }
+
+.rv-mini-cards {
+  display: flex;
+  gap: 3px;
+  align-items: center;
+}
+
+.rv-mini-img {
+  width: 36px;
+  height: 52px;
+  object-fit: contain;
+  border-radius: 4px;
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5));
+}
+
+/* CSS card back for the mini layout */
+.rv-mini-back {
+  width: 36px;
+  height: 52px;
+  border-radius: 4px;
+  border: 1px solid rgba(212,175,55,0.25);
+  background:
+    repeating-linear-gradient(45deg,  transparent 0, transparent 3px, rgba(212,175,55,0.07) 3px, rgba(212,175,55,0.07) 4px),
+    repeating-linear-gradient(-45deg, transparent 0, transparent 3px, rgba(212,175,55,0.07) 3px, rgba(212,175,55,0.07) 4px),
+    linear-gradient(160deg, #2f2318, #14100b);
+}
+
+.rv-mini-total {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--gold-400);
+  font-weight: 700;
+  min-width: 1.2em;
+  text-align: center;
+}
+
+.rv-natural-badge {
+  display: inline-flex;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold-500);
+  padding: 0.1em 0.55em;
+  border: 1px solid rgba(212,175,55,0.3);
+  border-radius: 999px;
+  margin-bottom: 0.45rem;
+}
+
+/* Error rows */
+.rv-errors {
+  border-top: 1px solid var(--line);
+  padding-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.rv-error {
+  font-size: 0.8rem;
+  color: var(--cream-dim);
+  line-height: 1.5;
+}
+
+.rv-error__step {
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--incorrect);
+  margin-right: 0.3em;
+}
+
+.rv-error__rule {
+  display: block;
+  font-size: 0.73rem;
+  color: var(--muted);
+  margin-top: 0.12rem;
+  padding-left: 0.5rem;
+  border-left: 2px solid rgba(212,175,55,0.3);
+}
+
+/* ---- Empty state ---------------------------------------------------- */
+.rv-empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 2rem 1.5rem;
+  text-align: center;
+}
+
+.rv-empty__icon {
+  font-size: 2.5rem;
+  color: var(--correct);
+  opacity: 0.7;
+}
+
+.rv-empty__msg {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+  color: var(--cream);
+}
+
+.rv-empty__hint {
+  font-size: 0.82rem;
+  color: var(--muted);
+  max-width: 300px;
+  line-height: 1.5;
+}
+
+/* ---- Confirm clear overlay ------------------------------------------ */
+.rv-confirm {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 1rem;
+  animation: fadeIn 0.18s var(--ease);
+}
+
+.rv-confirm__box {
+  background: var(--ink-800);
+  border: 1px solid var(--gold-glow);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 1.5rem 1.2rem;
+  max-width: 340px;
+  width: 100%;
+  text-align: center;
+  animation: sr-pop 0.22s var(--ease);
+}
+
+.rv-confirm__box h3 {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold-300);
+  margin-bottom: 0.55rem;
+}
+
+.rv-confirm__box p {
+  font-size: 0.84rem;
+  color: var(--cream-dim);
+  margin-bottom: 1rem;
+}
+
+.rv-confirm__actions {
+  display: flex;
+  gap: 0.6rem;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ---- Responsive adjustments ---------------------------------------- */
+@media (max-width: 420px) {
+  .rv-mini-img, .rv-mini-back { width: 30px; height: 43px; }
+  .rv-card { padding: 0.65rem 0.7rem; }
+  .rv-error { font-size: 0.75rem; }
+}
