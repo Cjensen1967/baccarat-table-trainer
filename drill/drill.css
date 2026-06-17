@@ -163,14 +163,16 @@
 }
 
 .scenario-context {
-  font-size: 0.76rem;
-  letter-spacing: 0.11em;
+  font-size: 0.88rem;
+  font-family: var(--font-display);
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--gold-300);
   margin: 0;
   text-align: center;
   min-height: 1em;
 }
+
 
 .scenario-answer {
   font-size: 0.87rem;
@@ -242,7 +244,8 @@
   .drill-seat    { gap: 0.3rem; }
   .drill-seat__label { font-size: 0.76rem; }
   .drill-btn     { padding: 0.55rem 0.6rem; font-size: 0.82rem; }
-  .scenario-context { font-size: 0.68rem; }
+  .scenario-context { font-size: 0.76rem; }
+
   .scenario-answer  { font-size: 0.76rem; padding: 0.35rem 0.7rem; }
   .drill-foot    { gap: 0.28rem; }
   .cat-btn       { font-size: 0.68rem; padding: 0.2em 0.65em; }

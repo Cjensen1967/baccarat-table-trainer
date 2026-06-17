@@ -262,14 +262,16 @@
 }
 
 .t-context {
-  font-size: 0.76rem;
-  letter-spacing: 0.11em;
+  font-size: 0.88rem;
+  font-family: var(--font-display);
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--gold-300);
   margin: 0;
   text-align: center;
   min-height: 1em;
 }
+
 
 /* Brief flash after each decision: ✓ or ✗ */
 .t-flash {
@@ -467,7 +469,8 @@
   .t-seat     { gap: 0.28rem; }
   .t-seat__label { font-size: 0.74rem; }
   .t-btn      { padding: 0.5rem 0.5rem; font-size: 0.78rem; }
-  .t-context  { font-size: 0.66rem; }
+  .t-context  { font-size: 0.76rem; }
+
   .t-foot     { gap: 0.22rem; }
   .t-timer    { font-size: 0.76rem; }
   .t-prog-lbl { font-size: 0.64rem; }
