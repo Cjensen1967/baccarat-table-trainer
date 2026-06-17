@@ -1,29 +1,35 @@
 /* =====================================================================
- * gate.js — Experimental entry gate.
+ * gate.js — Disclaimer gate for Baccarat Table Trainer.
  *
- * Unlike the original modules (which redirected to the root disclaimer
- * and then dumped the user into the OLD app), this gate keeps the user
- * INSIDE the experimental app: it sends them to experimental/disclaimer.html
- * with a ?next= pointer back to wherever they were headed.
+ * Include this in the <head> of every module page (before other scripts)
+ * so it runs as early as possible.
  *
- * Include this in the <head> of every experimental trainer page, BEFORE
- * the other scripts, so it runs as early as possible.
+ * How it works:
+ *   1. If the disclaimer flag is already set, do nothing.
+ *   2. Otherwise redirect to disclaimer.html with a ?next= pointer back
+ *      to the current page, then disclaimer.html returns here on accept.
+ *
+ * Works at any module depth (root index.html or module/index.html).
  * =================================================================== */
 (function () {
   var FLAG = 'bac_exp_disclaimer_accepted';
   if (sessionStorage.getItem(FLAG)) return;
 
-  // Work out this page's path relative to the experimental/ root so the
-  // disclaimer can return us to the exact module we were entering.
   var path = window.location.pathname;
-  var m = path.match(/experimental\/(.+)$/);
-  var next = m ? m[1] : 'index.html';
 
-  // Build the correct relative hop up to experimental/disclaimer.html for
-  // whatever depth this page sits at (root dashboard or a module folder).
-  var depth = next.split('/').length - 1; // 0 at root, 1 in a module folder
+  // Extract the last one or two path segments as the "next" target so the
+  // disclaimer can return the trainee to exactly the page they were entering.
+  //   /baccarat-table-trainer/drill/index.html  →  next = "drill/index.html"
+  //   /baccarat-table-trainer/index.html        →  next = "index.html"
+  var m = path.match(/\/([^/]+\/[^/]+\.html)$/) || path.match(/\/([^/]+\.html)$/);
+  var next = (m && m[1]) ? m[1] : 'index.html';
+
+  // Compute how many levels deep this page is so we can hop back to the
+  // project root where disclaimer.html lives.
+  //   "drill/index.html" → depth 1 → prefix "../"
+  //   "index.html"       → depth 0 → prefix "./"
+  var depth = next.split('/').length - 1;
   var prefix = depth > 0 ? new Array(depth + 1).join('../') : './';
-  var url = prefix + 'disclaimer.html?next=' + encodeURIComponent(next);
-  window.location.replace(url);
 
+  window.location.replace(prefix + 'disclaimer.html?next=' + encodeURIComponent(next));
 })();

@@ -3,9 +3,10 @@
  *
  * A dealer's-perspective layout: a discard tray and a dealing shoe on the
  * rail, Banker (left) and Player (right) seats with real third-card
- * placement, a STAND puck per side for waving off a draw, and a bottom
- * bet line (PLAYER / TIE / BANKER) used to pay the hand.
+ * placement, and a bet line (PLAYER / TIE / BANKER) to pay the hand.
+ * Sides stand implicitly — not dealing a card and advancing IS standing.
  *
+
  * Nothing here changes appearance based on the correct answer — every
  * affordance looks identical whether or not an action is required.
  * =================================================================== */

@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Baccarat Dealer Suite · Experimental</title>
+  <title>Baccarat Table Trainer</title>
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <link rel="stylesheet" href="css/variables.css" />
   <link rel="stylesheet" href="css/base.css" />
@@ -20,7 +21,7 @@
         Learn the third-card rules, then work the table like a real dealer.
         Built for phone landscape, tablet, and desktop.
       </p>
-      <span class="hero__badge">Experimental Build</span>
+
     </header>
 
     <section class="modules" id="modules" aria-label="Training modules">
@@ -30,7 +31,7 @@
     <footer class="home-foot">
       <div class="home-actions">
         <button class="btn btn--ghost" id="rules-btn"><i class="fas fa-book"></i> Rules Reference</button>
-        <a class="btn btn--ghost" href="../index.html"><i class="fas fa-arrow-left"></i> Original App</a>
+
       </div>
       <p style="margin-top:1.2rem">
         A workflow &amp; rules trainer — not a gambling app. Practice procedure, not luck.
@@ -78,10 +79,12 @@
         href: 'dealing/index.html', statsKey: 'bac_stats_dealing'
       },
       {
-        id: 'drill', live: false, level: 'Drill', icon: '⚡',
+        id: 'drill', live: true, level: 'Drill', icon: '⚡',
         title: 'Drill Mode', accent: 'var(--gold-500)',
-        desc: 'Rapid-fire single decisions to sharpen specific rules. Coming soon.'
+        desc: 'Rapid-fire single decisions — Player draw/stand, Banker conditional draws. Filter by category.',
+        href: 'drill/index.html', statsKey: 'bac_stats_drill'
       },
+
       {
         id: 'test', live: false, level: 'Assessment', icon: '🏅',
         title: 'Test Mode', accent: 'var(--gold-500)',
