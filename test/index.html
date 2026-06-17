@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, shrink-to-fit=no" />
+  <title>Assessment · Baccarat Table Trainer</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="../css/variables.css" />
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/table.css" />
+  <link rel="stylesheet" href="test.css" />
+  <script src="../js/core/gate.js"></script>
+</head>
+<body>
+  <div class="trainer trainer--bare" id="t-app">
+
+    <div class="trainer__stage" id="t-stage">
+
+      <!-- ══ Phase 1: Start screen ══════════════════════════════════════ -->
+      <div class="t-phase is-active" id="phase-start">
+        <div class="start-card">
+          <div class="start-card__icon">🏅</div>
+          <h1 class="start-card__title">Assessment</h1>
+          <p class="start-card__desc">
+            Work through complete baccarat hands — no hints, no coaching.
+            Decide Player, then Banker, then call the winner.
+            Your score is waiting at the end.
+          </p>
+
+          <div class="config-row">
+            <span class="config-label">Hands</span>
+            <div class="seg" id="hands-seg">
+              <button class="seg__btn" data-val="10">10</button>
+              <button class="seg__btn seg__btn--active" data-val="20">20</button>
+              <button class="seg__btn" data-val="30">30</button>
+            </div>
+          </div>
+
+          <button class="btn btn--gold btn--lg" id="start-btn">
+            Begin Assessment
+          </button>
+          <a class="btn btn--ghost" href="../index.html" style="margin-top:0.3rem">
+            <i class="fas fa-arrow-left"></i> Back
+          </a>
+        </div>
+      </div>
+
+      <!-- ══ Phase 2: Table felt ════════════════════════════════════════ -->
+      <section class="felt felt--test t-phase" id="phase-test">
+
+        <!-- Rail: back link + progress bar + timer -->
+        <div class="t-rail">
+          <a class="icon-btn" href="../index.html" title="Back to menu" aria-label="Back to menu">
+            <i class="fas fa-arrow-left"></i>
+          </a>
+          <div class="t-progress">
+            <div class="t-progress__fill" id="t-pbar-fill"></div>
+          </div>
+          <span class="t-prog-lbl" id="t-prog-lbl">Hand 1 of 20</span>
+          <span class="t-timer" id="t-timer">0:00</span>
+        </div>
+
+        <!-- BANKER seat — dealer's left  [3rd · 1st · 2nd] -->
+        <div class="t-seat t-seat--banker">
+          <div class="t-seat__label">Banker</div>
+          <div class="t-spots">
+            <div class="t-slot" id="t-b3"></div>
+            <div class="t-slot" id="t-b1"></div>
+            <div class="t-slot" id="t-b2"></div>
+          </div>
+        </div>
+
+        <!-- PLAYER seat — dealer's right  [1st · 2nd · 3rd] -->
+        <div class="t-seat t-seat--player">
+          <div class="t-seat__label">Player</div>
+          <div class="t-spots">
+            <div class="t-slot" id="t-p1"></div>
+            <div class="t-slot" id="t-p2"></div>
+            <div class="t-slot" id="t-p3"></div>
+          </div>
+        </div>
+
+        <!-- Foot: step context + flash + decision controls -->
+        <div class="t-foot">
+          <p class="t-context" id="t-context"></p>
+          <div class="t-flash" id="t-flash" hidden></div>
+          <div class="t-controls" id="t-controls"></div>
+        </div>
+
+      </section>
+
+      <!-- ══ Phase 3: Results ═══════════════════════════════════════════ -->
+      <div class="t-phase t-results-wrap" id="phase-results">
+        <div class="results-card">
+
+          <div class="rs-score-ring" id="rs-ring">
+            <span class="rs-pct" id="rs-pct">0%</span>
+            <span class="rs-hands-lbl">hands correct</span>
+          </div>
+          <div class="rs-counts">
+            <span id="rs-hands-correct">0</span>/<span id="rs-hands-total">20</span>
+          </div>
+
+          <div class="rs-breakdown" id="rs-breakdown"></div>
+          <div class="rs-time" id="rs-time"></div>
+
+          <div class="rs-missed" id="rs-missed"></div>
+
+          <div class="results-actions">
+            <button class="btn btn--gold btn--lg" id="new-test-btn">New Test</button>
+            <a class="btn btn--ghost btn--lg" href="../index.html">Menu</a>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- .trainer__stage -->
+  </div><!-- .trainer -->
+
+  <script src="test.js"></script>
+</body>
+</html>
