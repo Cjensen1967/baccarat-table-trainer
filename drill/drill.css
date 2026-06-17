@@ -3,8 +3,9 @@
  *
  * The drill felt is a flex-column layout (not the 3-area grid of the
  * guided / dealing modules): rail at top, scenario in the middle,
- * two decision buttons at the bottom. Text-based scenarios only — no
- * card images for faster-paced drilling.
+ * two decision buttons at the bottom. Scenarios show actual card images
+ * so the trainee practises hand recognition + mental totalling.
+
  *
  * ANTI-LEAKAGE NOTE: both buttons are styled identically before the
  * trainee answers. Neither button appears "more correct" than the
@@ -126,8 +127,68 @@
   to   { transform: scale(1);    opacity: 1; }
 }
 
+/* ---- Card-based scenario layout ------------------------------------ */
+
+/* Row of two or more hands (Banker + Player's 3rd, etc.) */
+.drill-layout {
+  display: flex;
+  flex-direction: row;
+  gap: 1.8rem;
+  align-items: flex-start;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Single hand: optional label above its cards */
+.drill-hand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.drill-hand-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* Row of card images for one hand */
+.drill-cards {
+  display: flex;
+  flex-direction: row;
+  gap: 0.35rem;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Individual card image */
+.drill-card {
+  width: clamp(52px, 11vw, 82px);
+  height: auto;
+  aspect-ratio: 2.5 / 3.5;
+  object-fit: contain;
+  border-radius: 7px;
+  filter: drop-shadow(0 3px 10px rgba(0, 0, 0, 0.55));
+  animation: chipIn 0.3s var(--ease);
+  flex-shrink: 0;
+  display: block;
+}
+
+/* Landscape phone: smaller cards */
+@media (orientation: landscape) and (max-height: 560px) {
+  .drill-card   { width: clamp(42px, 8.5vw, 62px); }
+  .drill-layout { gap: 1.2rem; }
+}
+
+@media (orientation: landscape) and (max-height: 430px) {
+  .drill-card { width: clamp(36px, 7.5vw, 54px); }
+}
+
 /* Explanation box — shown only after the trainee answers */
 .scenario-answer {
+
   font-size: 0.9rem;
   color: var(--cream-dim);
   background: rgba(0, 0, 0, 0.38);

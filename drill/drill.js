@@ -1,37 +1,63 @@
 /* =====================================================================
  * drill.js — Drill Mode: rapid-fire single-decision rules practice.
  *
- * Text-based scenarios (no card images) for fast, focused drilling.
- * Three exercise categories:
- *   Player — Player total 2–7, draw or stand?
- *   Banker — Banker total + Player's third card (or Player stood), draw?
- *   Mixed  — randomly mixes both types
+ * Scenarios are presented as actual card images so the trainee must
+ * recognise card values and total the hand — not just react to a number.
+ *
+ * Three categories:
+ *   Player — Two player cards; Draw or Stand?
+ *   Banker — Banker's two cards (+Player's 3rd when applicable); Draw or Stand?
+ *   Mixed  — random mix of both
  *
  * ANSWER LEAKAGE PREVENTION:
- *   - The correct answer is never revealed until the trainee taps.
- *   - Both buttons look equally neutral before a decision.
- *   - Correct/wrong styling + explanation appear only post-commit.
+ *   Cards, layout, and controls reveal nothing about the correct action
+ *   before the trainee commits. Correct/wrong + explanation are shown
+ *   only after the choice is made.
  * =================================================================== */
 
 (function () {
   'use strict';
 
   /* ==================================================================
-   * Baccarat rule helpers (self-contained — no dependency on rules.js)
+   * Card generation (self-contained, no dependency on cards.js)
    * ================================================================== */
 
-  function playerDraws(total) { return total <= 5; }
+  const SUITS = ['clubs', 'diamonds', 'hearts', 'spades'];
 
-  function bankerDrawsWhenPlayerStood(bTotal) { return bTotal <= 5; }
+  // Maps baccarat point value → possible ranks
+  const RANKS_BY_VALUE = [
+    ['T', 'J', 'Q', 'K'], // 0
+    ['A'],                  // 1
+    ['2'],                  // 2
+    ['3'],                  // 3
+    ['4'],                  // 4
+    ['5'],                  // 5
+    ['6'],                  // 6
+    ['7'],                  // 7
+    ['8'],                  // 8
+    ['9']                   // 9
+  ];
 
-  function bankerDrawsAfterPlayerDrew(bTotal, p3) {
-    if (bTotal <= 2) return true;
-    if (bTotal === 7) return false;
-    if (bTotal === 3) return p3 !== 8;
-    if (bTotal === 4) return p3 >= 2 && p3 <= 7;
-    if (bTotal === 5) return p3 >= 4 && p3 <= 7;
-    if (bTotal === 6) return p3 === 6 || p3 === 7;
-    return false;
+  // Display labels for ranks (used in alt text)
+  const RANK_NAMES = { A: 'Ace', T: '10', J: 'Jack', Q: 'Queen', K: 'King' };
+
+  function randomCardWithValue(v) {
+    const ranks = RANKS_BY_VALUE[v];
+    const rank  = ranks[Math.floor(Math.random() * ranks.length)];
+    const suit  = SUITS[Math.floor(Math.random() * SUITS.length)];
+    const name  = (RANK_NAMES[rank] || rank) + ' of ' + suit;
+    return {
+      value:     v,
+      imagePath: `../assets/${suit}${rank}.png`,
+      label:     name
+    };
+  }
+
+  /** Return a pair of cards whose baccarat total equals `total`. */
+  function pairWithTotal(total) {
+    const v1 = Math.floor(Math.random() * 10);       // 0–9
+    const v2 = (total - v1 + 10) % 10;
+    return [randomCardWithValue(v1), randomCardWithValue(v2)];
   }
 
   function rnd(min, max) {
@@ -39,80 +65,126 @@
   }
 
   /* ==================================================================
+   * HTML helpers
+   * ================================================================== */
+
+  function cardImg(card) {
+    return `<img class="drill-card" src="${card.imagePath}" alt="${card.label}" draggable="false">`;
+  }
+
+  /** One hand: optional label above a row of cards. */
+  function handHTML(cards, label) {
+    const imgs  = cards.map(cardImg).join('');
+    const lbl   = label ? `<span class="drill-hand-label">${label}</span>` : '';
+    return `<div class="drill-hand">${lbl}<div class="drill-cards">${imgs}</div></div>`;
+  }
+
+  /* ==================================================================
+   * Baccarat rules (self-contained)
+   * ================================================================== */
+
+  function playerDraws(t) { return t <= 5; }
+
+  function bankerDrawsWhenPlayerStood(bt) { return bt <= 5; }
+
+  function bankerDrawsAfterPlayerDrew(bt, p3) {
+    if (bt <= 2) return true;
+    if (bt === 7) return false;
+    if (bt === 3) return p3 !== 8;
+    if (bt === 4) return p3 >= 2 && p3 <= 7;
+    if (bt === 5) return p3 >= 4 && p3 <= 7;
+    if (bt === 6) return p3 === 6 || p3 === 7;
+    return false;
+  }
+
+  /* ==================================================================
    * Scenario generators
-   * Each returns: { context, html, correct ('draw'|'stand'), explanation }
+   * Each returns: { context, html, correct, explanation }
    * ================================================================== */
 
   function genPlayerScenario() {
-    // Player totals 2–7. Skip 0,1 (too rare & teach same rule), 8,9 (natural).
-    const total = rnd(2, 7);
-    const correct = playerDraws(total) ? 'draw' : 'stand';
+    const total        = rnd(0, 7);
+    const [c1, c2]     = pairWithTotal(total);
+    const correct      = playerDraws(total) ? 'draw' : 'stand';
+    const sumStr       = (c1.value + c2.value > 9)
+      ? `${c1.value}+${c2.value}=<b>${c1.value + c2.value}</b>→<b>${total}</b>`
+      : `${c1.value}+${c2.value}=<b>${total}</b>`;
+
     return {
       context: 'Player — Draw or Stand?',
-      html: `Player has <span class="total-chip">${total}</span>`,
+      html:    handHTML([c1, c2], null),
       correct,
-      explanation: correct === 'draw'
-        ? `Player draws on 0–5. Total is ${total} — draw.`
-        : `Player stands on 6–7. Total is ${total} — stand.`
+      explanation: `${sumStr}. ` + (correct === 'draw'
+        ? `Player draws on 0–5 — draw.`
+        : `Player stands on 6–7 — stand.`)
     };
   }
 
   function genBankerScenario() {
-    const bTotal = rnd(0, 7); // naturals (8–9) excluded
-    const playerStood = Math.random() < 0.3; // ~30% of banker drills = player stood
+    const bTotal       = rnd(0, 7);
+    const [bC1, bC2]   = pairWithTotal(bTotal);
+    const playerStood  = Math.random() < 0.3;
 
     if (playerStood) {
       const pStandTotal = Math.random() < 0.5 ? 6 : 7;
-      const correct = bankerDrawsWhenPlayerStood(bTotal) ? 'draw' : 'stand';
+      const correct     = bankerDrawsWhenPlayerStood(bTotal) ? 'draw' : 'stand';
+      const bSumStr     = (bC1.value + bC2.value > 9)
+        ? `${bC1.value}+${bC2.value}→<b>${bTotal}</b>`
+        : `${bC1.value}+${bC2.value}=<b>${bTotal}</b>`;
+
       return {
         context: `Player stood on ${pStandTotal} — Banker Draw or Stand?`,
-        html: `Banker has <span class="total-chip">${bTotal}</span>`,
+        html:    handHTML([bC1, bC2], 'Banker'),
         correct,
-        explanation: correct === 'draw'
-          ? `When Player stands, Banker follows the same rule: draw on 0–5. Banker total: ${bTotal}.`
-          : `When Player stands, Banker follows the same rule: stand on 6–7. Banker total: ${bTotal}.`
+        explanation: `Banker total: ${bSumStr}. When Player stands, Banker follows same rule — `
+          + (correct === 'draw' ? 'draw on 0–5.' : 'stand on 6–7.')
       };
     }
 
     // Player drew a third card
-    const p3 = rnd(0, 9);
+    const p3      = rnd(0, 9);
+    const p3Card  = randomCardWithValue(p3);
     const correct = bankerDrawsAfterPlayerDrew(bTotal, p3) ? 'draw' : 'stand';
-    const explanation = getBankerRuleText(bTotal, p3);
+    const bSumStr = (bC1.value + bC2.value > 9)
+      ? `${bC1.value}+${bC2.value}→<b>${bTotal}</b>`
+      : `${bC1.value}+${bC2.value}=<b>${bTotal}</b>`;
+
+    const layout = `<div class="drill-layout">`
+      + handHTML([bC1, bC2], 'Banker')
+      + handHTML([p3Card],   "Player's 3rd")
+      + `</div>`;
+
     return {
-      context: `Player drew — Banker Draw or Stand?`,
-      html: `Banker <span class="total-chip">${bTotal}</span>` +
-            ` &nbsp;Player's 3rd&nbsp;<span class="total-chip">${p3}</span>`,
+      context:     'Player drew — Banker Draw or Stand?',
+      html:        layout,
       correct,
-      explanation
+      explanation: `Banker: ${bSumStr}. Player's 3rd: <b>${p3}</b>. `
+                 + getBankerRuleText(bTotal, p3)
     };
   }
 
-  function getBankerRuleText(bTotal, p3) {
-    if (bTotal <= 2) {
-      return `Banker 0–2 always draws. Banker total: ${bTotal}.`;
+  function getBankerRuleText(bt, p3) {
+    if (bt <= 2) return `Banker 0–2 always draws.`;
+    if (bt === 3) return p3 === 8
+      ? `Banker 3 stands when Player's 3rd is 8.`
+      : `Banker 3 draws (exception: Player 3rd=8 only). Player drew ${p3} — draw.`;
+    if (bt === 4) {
+      const d = p3 >= 2 && p3 <= 7;
+      return d
+        ? `Banker 4 draws on Player's 3rd 2–7. Player drew ${p3} — draw.`
+        : `Banker 4 draws only on Player's 3rd 2–7. Player drew ${p3} — stand.`;
     }
-    if (bTotal === 3) {
-      return p3 === 8
-        ? `Banker 3 stands when Player's third card is 8.`
-        : `Banker 3 draws unless Player's third is 8. Player drew ${p3} — so Banker draws.`;
+    if (bt === 5) {
+      const d = p3 >= 4 && p3 <= 7;
+      return d
+        ? `Banker 5 draws on Player's 3rd 4–7. Player drew ${p3} — draw.`
+        : `Banker 5 draws only on Player's 3rd 4–7. Player drew ${p3} — stand.`;
     }
-    if (bTotal === 4) {
-      const draws = p3 >= 2 && p3 <= 7;
-      return draws
-        ? `Banker 4 draws when Player's third is 2–7. Player drew ${p3} — so Banker draws.`
-        : `Banker 4 draws only on Player's third 2–7. Player drew ${p3} — outside that range, Banker stands.`;
-    }
-    if (bTotal === 5) {
-      const draws = p3 >= 4 && p3 <= 7;
-      return draws
-        ? `Banker 5 draws when Player's third is 4–7. Player drew ${p3} — so Banker draws.`
-        : `Banker 5 draws only on Player's third 4–7. Player drew ${p3} — outside that range, Banker stands.`;
-    }
-    if (bTotal === 6) {
-      const draws = p3 === 6 || p3 === 7;
-      return draws
-        ? `Banker 6 draws when Player's third is 6 or 7. Player drew ${p3} — so Banker draws.`
-        : `Banker 6 draws only when Player's third is 6–7. Player drew ${p3} — Banker stands.`;
+    if (bt === 6) {
+      const d = p3 === 6 || p3 === 7;
+      return d
+        ? `Banker 6 draws on Player's 3rd 6–7. Player drew ${p3} — draw.`
+        : `Banker 6 draws only on Player's 3rd 6–7. Player drew ${p3} — stand.`;
     }
     return `Banker 7 always stands.`;
   }
@@ -120,7 +192,6 @@
   function genScenario(cat) {
     if (cat === 'player') return genPlayerScenario();
     if (cat === 'banker') return genBankerScenario();
-    // Mixed: ~40% Player, ~60% Banker (Banker rules are harder)
     return Math.random() < 0.4 ? genPlayerScenario() : genBankerScenario();
   }
 
@@ -131,11 +202,8 @@
   const STORE_KEY = 'bac_stats_drill';
 
   function loadStore() {
-    try {
-      return JSON.parse(localStorage.getItem(STORE_KEY)) || { correct: 0, incorrect: 0, hands: 0 };
-    } catch (e) {
-      return { correct: 0, incorrect: 0, hands: 0 };
-    }
+    try { return JSON.parse(localStorage.getItem(STORE_KEY)) || { correct: 0, incorrect: 0, hands: 0 }; }
+    catch (e) { return { correct: 0, incorrect: 0, hands: 0 }; }
   }
 
   function saveStore(s) {
@@ -157,17 +225,17 @@
    * DOM refs
    * ================================================================== */
 
-  const contextEl  = document.getElementById('scenario-context');
-  const qEl        = document.getElementById('scenario-q');
-  const answerEl   = document.getElementById('scenario-answer');
-  const controls   = document.getElementById('drill-controls');
-  const btnDraw    = document.getElementById('btn-draw');
-  const btnStand   = document.getElementById('btn-stand');
+  const contextEl = document.getElementById('scenario-context');
+  const qEl       = document.getElementById('scenario-q');
+  const answerEl  = document.getElementById('scenario-answer');
+  const controls  = document.getElementById('drill-controls');
+  const btnDraw   = document.getElementById('btn-draw');
+  const btnStand  = document.getElementById('btn-stand');
 
-  const elCorrect  = document.getElementById('s-correct');
-  const elWrong    = document.getElementById('s-wrong');
-  const elStreak   = document.getElementById('s-streak');
-  const elRate     = document.getElementById('s-rate');
+  const elCorrect = document.getElementById('s-correct');
+  const elWrong   = document.getElementById('s-wrong');
+  const elStreak  = document.getElementById('s-streak');
+  const elRate    = document.getElementById('s-rate');
 
   /* ==================================================================
    * UI
@@ -188,9 +256,8 @@
     contextEl.textContent = current.context;
     qEl.innerHTML         = current.html;
     answerEl.hidden       = true;
-    answerEl.textContent  = '';
+    answerEl.innerHTML    = '';
 
-    // Reset button classes to neutral
     btnDraw.className  = 'drill-btn drill-btn--draw';
     btnStand.className = 'drill-btn drill-btn--stand';
     controls.classList.remove('answered');
@@ -211,7 +278,6 @@
       wrong++;
       streak = 0;
       (choice === 'draw' ? btnDraw : btnStand).classList.add('wrong');
-      // Reveal which was correct — shown AFTER the trainee commits
       (current.correct === 'draw' ? btnDraw : btnStand).classList.add('correct');
     }
 
@@ -221,18 +287,16 @@
     const store = loadStore();
     store.correct   = (store.correct   || 0) + (wasCorrect ? 1 : 0);
     store.incorrect = (store.incorrect || 0) + (wasCorrect ? 0 : 1);
-    store.hands     = (store.correct   || 0) + (store.incorrect || 0);
+    store.hands     = (store.correct || 0) + (store.incorrect || 0);
     saveStore(store);
 
-    // Show explanation
     const icon = wasCorrect
       ? `<i class="fas fa-circle-check" style="color:var(--correct)"></i> `
       : `<i class="fas fa-circle-xmark" style="color:var(--incorrect)"></i> `;
     answerEl.innerHTML = icon + current.explanation;
-    answerEl.hidden = false;
+    answerEl.hidden    = false;
 
-    // Auto-advance to the next scenario after a brief pause
-    setTimeout(showScenario, 2200);
+    setTimeout(showScenario, 2400);
   }
 
   /* ==================================================================
