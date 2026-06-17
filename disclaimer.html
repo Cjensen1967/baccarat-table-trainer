@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Disclaimer · Baccarat Table Trainer</title>
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <style>
+    .gate {
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      padding: 1.2rem;
+    }
+    .gate__card {
+      width: min(620px, 100%);
+      background: linear-gradient(180deg, var(--surface-raised), var(--surface));
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-2);
+      overflow: hidden;
+    }
+    .gate__head {
+      padding: 1.4rem 1.5rem 1rem;
+      border-bottom: 1px solid var(--line);
+      background:
+        radial-gradient(120% 120% at 50% -20%, var(--felt-600), transparent 60%);
+      text-align: center;
+    }
+    .gate__kicker {
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      font-size: 0.7rem;
+      color: var(--gold-500);
+    }
+    .gate__title {
+      font-size: 1.6rem;
+      margin-top: 0.3rem;
+      background: linear-gradient(180deg, var(--cream), var(--gold-400));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .gate__body {
+      padding: 1.3rem 1.5rem;
+      color: var(--cream-dim);
+      line-height: 1.55;
+      max-height: 56vh;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .gate__body h2 {
+      color: var(--cream);
+      font-size: 1.05rem;
+      margin: 1rem 0 0.4rem;
+    }
+    .gate__body h2:first-child { margin-top: 0; }
+    .gate__body ul { margin: 0.3rem 0 0.3rem 1.1rem; }
+    .gate__body li { margin-bottom: 0.3rem; font-size: 0.92rem; }
+    .gate__notice {
+      border-left: 3px solid var(--gold-500);
+      background: rgba(212, 175, 55, 0.08);
+      padding: 0.7rem 0.9rem;
+      border-radius: 6px;
+      margin: 0.8rem 0;
+      font-size: 0.9rem;
+    }
+    .gate__foot {
+      display: flex;
+      gap: 0.7rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 1.1rem 1.5rem 1.4rem;
+      border-top: 1px solid var(--line);
+    }
+  </style>
+</head>
+<body>
+  <div class="gate">
+    <div class="gate__card">
+      <div class="gate__head">
+        <div class="gate__kicker">Experimental Build</div>
+        <h1 class="gate__title">Educational Disclaimer</h1>
+      </div>
+      <div class="gate__body">
+        <h2>For Educational Purposes Only</h2>
+        <p>This Baccarat Table Trainer is for <strong>education and practice</strong>. It teaches
+          dealing procedure and the third-card drawing rules of Punto Banco using simulated cards.</p>
+        <div class="gate__notice">
+          This training suite does not encourage, promote, or endorse gambling. All play is
+          simulated — no wagers, no real money.
+        </div>
+        <h2>Age Requirement</h2>
+        <p>Intended for individuals <strong>18 years of age or older</strong>. By continuing you
+          confirm you meet this requirement.</p>
+        <h2>Responsible Gaming</h2>
+        <ul>
+          <li>Gambling involves risk; only ever risk what you can afford to lose.</li>
+          <li>Set limits and stick to them.</li>
+          <li>Seek help if gambling becomes a problem.</li>
+          <li>Check your local laws and regulations.</li>
+        </ul>
+        <div class="gate__notice">
+          <strong>Problem gambling help:</strong> National helpline 1-800-522-4700 ·
+          <a href="https://www.ncpgambling.org/" target="_blank" rel="noopener" style="color:var(--gold-400)">ncpgambling.org</a>
+        </div>
+        <p>Provided as-is for educational purposes. The creators assume no responsibility for how
+          knowledge gained here is applied.</p>
+      </div>
+      <div class="gate__foot">
+        <button class="btn btn--gold btn--lg" id="accept">I Understand — Continue</button>
+        <button class="btn btn--ghost btn--lg" id="decline">Exit</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var FLAG = 'bac_exp_disclaimer_accepted';
+
+      function safeNext() {
+        var raw = new URLSearchParams(window.location.search).get('next') || 'index.html';
+        try { raw = decodeURIComponent(raw); } catch (e) {}
+        // Only allow relative paths INSIDE the experimental app — never an
+        // absolute URL, protocol, or parent escape back to the old root.
+        if (/^[a-z]+:/i.test(raw) || raw.charAt(0) === '/' || raw.indexOf('..') !== -1) {
+          return 'index.html';
+        }
+        return raw;
+      }
+
+      document.getElementById('accept').addEventListener('click', function () {
+        sessionStorage.setItem(FLAG, 'true');
+        window.location.replace(safeNext());
+      });
+
+      document.getElementById('decline').addEventListener('click', function () {
+        // Leave the experimental app entirely.
+        window.location.replace('../index.html');
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, shrink-to-fit=no" />
+  <title>Guided Trainer · Baccarat Suite</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="../css/variables.css" />
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/table.css" />
+  <link rel="stylesheet" href="guided.css" />
+  <script src="../js/core/gate.js"></script>
+</head>
+<body>
+  <div class="trainer">
+    <header class="topbar">
+      <a class="icon-btn" href="../index.html" title="Back to menu"><i class="fas fa-arrow-left"></i></a>
+      <span class="topbar__title">Guided Trainer · L1</span>
+      <span class="rotate-hint"><i class="fas fa-rotate"></i> Turn sideways for table view</span>
+      <span class="topbar__spacer"></span>
+      <button class="icon-btn" id="hint-btn" title="Optional hint"><i class="fas fa-lightbulb"></i></button>
+      <button class="icon-btn" id="rules-btn" title="Drawing rules"><i class="fas fa-book"></i></button>
+    </header>
+
+
+    <div class="trainer__stage">
+      <section class="felt felt--guided" id="felt">
+        <!-- BANKER seat (dealer's left) -->
+        <div class="hand hand--banker" id="zone-banker">
+          <div class="hand__label">Banker <span class="hand__total" id="banker-total"></span></div>
+          <div class="cards">
+            <div class="slot" id="banker-card-3"></div>
+            <div class="slot" id="banker-card-1"></div>
+            <div class="slot" id="banker-card-2"></div>
+          </div>
+          <div class="zone-actions" id="banker-actions">
+            <button class="btn btn--banker zone-btn" id="btn-bdraw">Draw</button>
+            <button class="btn btn--ghost zone-btn" id="btn-bstand">Stand</button>
+          </div>
+        </div>
+
+        <!-- Center: coach + progress + outcome calls -->
+        <div class="center">
+          <ol class="progress" id="progress">
+            <li data-step="natural"><span>Naturals</span></li>
+            <li data-step="pdraw"><span>Player</span></li>
+            <li data-step="bdraw"><span>Banker</span></li>
+            <li data-step="final"><span>Result</span></li>
+          </ol>
+
+          <div class="coach" id="coach">
+            <div class="coach__chip"><i class="fas fa-graduation-cap"></i></div>
+            <p class="coach__text" id="prompt">Dealing…</p>
+          </div>
+
+          <div class="center-actions" id="center-actions">
+            <button class="btn btn--banker" id="btn-banker">Banker</button>
+            <button class="btn btn--player" id="btn-player">Player</button>
+            <button class="btn btn--gold" id="btn-tie">Tie</button>
+            <button class="btn" id="btn-none">No Natural</button>
+          </div>
+        </div>
+
+        <!-- PLAYER seat (dealer's right) -->
+        <div class="hand hand--player" id="zone-player">
+          <div class="hand__label">Player <span class="hand__total" id="player-total"></span></div>
+          <div class="cards">
+            <div class="slot" id="player-card-1"></div>
+            <div class="slot" id="player-card-2"></div>
+            <div class="slot" id="player-card-3"></div>
+          </div>
+          <div class="zone-actions" id="player-actions">
+            <button class="btn btn--player zone-btn" id="btn-pdraw">Draw</button>
+            <button class="btn btn--ghost zone-btn" id="btn-pstand">Stand</button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <footer class="dock">
+      <div class="dock__stats">
+        <span class="statchip">Correct <b id="s-correct">0</b></span>
+        <span class="statchip">Wrong <b id="s-incorrect">0</b></span>
+        <span class="statchip">Hands <b id="s-hands">0</b></span>
+        <span class="statchip">Streak <b id="s-streak">0</b></span>
+        <span class="statchip">Peeks <b id="s-peeks">0</b></span>
+      </div>
+      <span class="dock__spacer"></span>
+      <button class="icon-btn" id="reset-btn" title="Reset stats"><i class="fas fa-rotate-right"></i></button>
+    </footer>
+  </div>
+
+  <div class="feedback" id="feedback"></div>
+
+  <!-- Rules sheet -->
+  <div class="sheet-backdrop" id="rules-backdrop"></div>
+  <div class="sheet" id="rules-sheet" role="dialog" aria-modal="true" aria-label="Drawing rules">
+    <button class="btn btn--ghost sheet__close" id="rules-close"><i class="fas fa-xmark"></i></button>
+    <h2>Drawing Rules</h2>
+    <h3>Player</h3>
+    <ul>
+      <li>0–5 : Draw a third card</li>
+      <li>6–7 : Stand</li>
+      <li>8–9 : Natural (initial two cards only)</li>
+    </ul>
+    <h3>Banker</h3>
+    <ul>
+      <li>If Player stands, Banker follows the Player drawing rule</li>
+      <li>0–2 : Always draw</li>
+      <li>3 : Draw unless Player's third card is 8</li>
+      <li>4 : Draw if Player's third card is 2–7</li>
+      <li>5 : Draw if Player's third card is 4–7</li>
+      <li>6 : Draw if Player's third card is 6–7</li>
+      <li>7 : Stand</li>
+      <li>8–9 : Natural (initial two cards only)</li>
+    </ul>
+  </div>
+
+  <script src="../js/core/cards.js"></script>
+  <script src="../js/core/rules.js"></script>
+  <script src="../js/core/stats.js"></script>
+  <script src="../js/core/ui.js"></script>
+  <script src="guided.js"></script>
+</body>
+</html>

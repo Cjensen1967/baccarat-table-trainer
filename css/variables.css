@@ -1,0 +1,67 @@
+/* =====================================================================
+ * variables.css — Design tokens for the experimental Baccarat Suite.
+ * Modern casino / table-game aesthetic: deep felt greens, burgundy
+ * accents, gold trim, dark professional surfaces.
+ * =================================================================== */
+
+:root {
+  /* Felt + table */
+  --felt-900: #04140c;
+  --felt-800: #062c1a;
+  --felt-700: #0a4a2c;
+  --felt-600: #0d6138;
+  --felt-500: #117a47;
+  --felt-rim: #03291a;
+
+  /* Burgundy accents (banker / chips) */
+  --burgundy-700: #4a121c;
+  --burgundy-600: #6b1f2a;
+  --burgundy-500: #8a2734;
+
+  /* Player blue accent for clear side separation */
+  --royal-700: #14304f;
+  --royal-600: #1d4670;
+  --royal-500: #2a5e94;
+
+  /* Gold trim */
+  --gold-500: #d4af37;
+  --gold-400: #e6c860;
+  --gold-glow: rgba(212, 175, 55, 0.35);
+
+  /* Neutrals / surfaces */
+  --ink-900: #0c0a08;
+  --ink-800: #15110d;
+  --ink-700: #221b15;
+  --surface: #1c1813;
+  --surface-raised: #272019;
+  --line: rgba(255, 255, 255, 0.08);
+
+  /* Text */
+  --cream: #f2ead6;
+  --cream-dim: #cabfa6;
+  --muted: #8b8170;
+
+  /* Feedback */
+  --correct: #2fbf6b;
+  --correct-bg: rgba(47, 191, 107, 0.16);
+  --incorrect: #e0556b;
+  --incorrect-bg: rgba(224, 85, 107, 0.16);
+  --hint: #e6c860;
+
+  /* Geometry */
+  --radius-sm: 8px;
+  --radius: 14px;
+  --radius-lg: 22px;
+  --shadow-1: 0 2px 8px rgba(0, 0, 0, 0.35);
+  --shadow-2: 0 10px 30px rgba(0, 0, 0, 0.45);
+  --shadow-inset: inset 0 0 60px rgba(0, 0, 0, 0.45);
+
+  /* Typography */
+  --font-ui: "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+  --font-display: "Georgia", "Times New Roman", serif;
+
+  /* Motion */
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --t-fast: 0.15s;
+  --t: 0.3s;
+}

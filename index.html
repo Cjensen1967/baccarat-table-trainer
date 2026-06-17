@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Baccarat Dealer Suite · Experimental</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/home.css" />
+  <script src="js/core/gate.js"></script>
+</head>
+
+<body>
+  <main class="home">
+    <header class="hero">
+      <p class="hero__kicker">Dealer Training Suite</p>
+      <h1 class="hero__title">Baccarat Table Trainer</h1>
+      <p class="hero__sub">
+        Learn the third-card rules, then work the table like a real dealer.
+        Built for phone landscape, tablet, and desktop.
+      </p>
+      <span class="hero__badge">Experimental Build</span>
+    </header>
+
+    <section class="modules" id="modules" aria-label="Training modules">
+      <!-- Module cards injected by JS so we can show live progress. -->
+    </section>
+
+    <footer class="home-foot">
+      <div class="home-actions">
+        <button class="btn btn--ghost" id="rules-btn"><i class="fas fa-book"></i> Rules Reference</button>
+        <a class="btn btn--ghost" href="../index.html"><i class="fas fa-arrow-left"></i> Original App</a>
+      </div>
+      <p style="margin-top:1.2rem">
+        A workflow &amp; rules trainer — not a gambling app. Practice procedure, not luck.
+      </p>
+    </footer>
+  </main>
+
+  <!-- Rules reference sheet (shared markup) -->
+  <div class="sheet-backdrop" id="rules-backdrop"></div>
+  <div class="sheet" id="rules-sheet" role="dialog" aria-modal="true" aria-label="Baccarat drawing rules">
+    <button class="btn btn--ghost sheet__close" id="rules-close"><i class="fas fa-xmark"></i></button>
+    <h2>Drawing Rules</h2>
+    <h3>Player</h3>
+    <ul>
+      <li>0–5 : Draw a third card</li>
+      <li>6–7 : Stand</li>
+      <li>8–9 : Natural (initial two cards only)</li>
+    </ul>
+    <h3>Banker</h3>
+    <ul>
+      <li>If Player stands, Banker follows the Player drawing rule</li>
+      <li>0–2 : Always draw</li>
+      <li>3 : Draw unless Player's third card is 8</li>
+      <li>4 : Draw if Player's third card is 2–7</li>
+      <li>5 : Draw if Player's third card is 4–7</li>
+      <li>6 : Draw if Player's third card is 6–7</li>
+      <li>7 : Stand</li>
+      <li>8–9 : Natural (initial two cards only)</li>
+    </ul>
+  </div>
+
+  <script>
+    // Module catalogue. Live modules link out; "soon" modules are placeholders.
+    const MODULES = [
+      {
+        id: 'guided', live: true, level: 'Level 1', icon: '🎓',
+        title: 'Guided Trainer', accent: 'var(--royal-500)',
+        desc: 'Step-by-step coaching through every decision. Learn the third-card sequence with prompts and post-answer explanations.',
+        href: 'guided/index.html', statsKey: 'bac_stats_guided'
+      },
+      {
+        id: 'dealing', live: true, level: 'Level 2', icon: '🃏',
+        title: 'Real Dealing Trainer', accent: 'var(--burgundy-500)',
+        desc: 'No prompts. Work the hand exactly as you would at a live table. Place cards, call the result, get caught on mistakes.',
+        href: 'dealing/index.html', statsKey: 'bac_stats_dealing'
+      },
+      {
+        id: 'drill', live: false, level: 'Drill', icon: '⚡',
+        title: 'Drill Mode', accent: 'var(--gold-500)',
+        desc: 'Rapid-fire single decisions to sharpen specific rules. Coming soon.'
+      },
+      {
+        id: 'test', live: false, level: 'Assessment', icon: '🏅',
+        title: 'Test Mode', accent: 'var(--gold-500)',
+        desc: 'Timed, no-peek assessment with a final score. Coming soon.'
+      },
+      {
+        id: 'review', live: false, level: 'Review', icon: '🔁',
+        title: 'Missed Hands', accent: 'var(--gold-500)',
+        desc: 'Replay and study the hands you got wrong. Coming soon.'
+      },
+      {
+        id: 'progress', live: false, level: 'Stats', icon: '📊',
+        title: 'Progress', accent: 'var(--gold-500)',
+        desc: 'Track accuracy and streaks across every mode. Coming soon.'
+      }
+    ];
+
+    function readStat(key) {
+      try {
+        const raw = localStorage.getItem(key);
+        if (!raw) return null;
+        const d = JSON.parse(raw);
+        const total = (d.correct || 0) + (d.incorrect || 0);
+        const rate = total ? Math.round((d.correct / total) * 100) : 0;
+        return { hands: d.hands || 0, rate };
+      } catch (e) { return null; }
+    }
+
+    function statLine(m) {
+      if (!m.live) return '<div class="module-card__stat">Not yet available</div>';
+      const s = readStat(m.statsKey);
+      if (!s || s.hands === 0) return '<div class="module-card__stat">No sessions yet — start training</div>';
+      return `<div class="module-card__stat"><b>${s.hands}</b> hands · <b>${s.rate}%</b> accuracy</div>`;
+    }
+
+    function render() {
+      const grid = document.getElementById('modules');
+      grid.innerHTML = MODULES.map(m => {
+        const cls = m.live ? 'module-card module-card--live' : 'module-card module-card--soon';
+        const tag = m.live
+          ? '<span class="module-card__tag live">Ready</span>'
+          : '<span class="module-card__tag">Soon</span>';
+        const inner = `
+          <div class="module-card__top">
+            <span class="module-card__icon">${m.icon}</span>
+            ${tag}
+          </div>
+          <span class="module-card__level">${m.level}</span>
+          <h2 class="module-card__title">${m.title}</h2>
+          <p class="module-card__desc">${m.desc}</p>
+          ${statLine(m)}`;
+        if (m.live) {
+          return `<a class="${cls}" style="--accent:${m.accent}" href="${m.href}">${inner}</a>`;
+        }
+        return `<div class="${cls}" style="--accent:${m.accent}">${inner}</div>`;
+      }).join('');
+    }
+
+    render();
+
+    // Rules sheet wiring
+    const backdrop = document.getElementById('rules-backdrop');
+    const sheet = document.getElementById('rules-sheet');
+    const open = () => { backdrop.classList.add('open'); sheet.classList.add('open'); };
+    const close = () => { backdrop.classList.remove('open'); sheet.classList.remove('open'); };
+    document.getElementById('rules-btn').addEventListener('click', open);
+    document.getElementById('rules-close').addEventListener('click', close);
+    backdrop.addEventListener('click', close);
+  </script>
+</body>
+</html>

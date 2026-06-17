@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, shrink-to-fit=no" />
+  <title>Real Dealing Trainer · Baccarat Suite</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="../css/variables.css" />
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/table.css" />
+  <link rel="stylesheet" href="dealing.css" />
+  <script src="../js/core/gate.js"></script>
+</head>
+<body>
+  <div class="trainer trainer--bare">
+    <div class="trainer__stage">
+      <section class="felt felt--dealing" id="felt">
+        <!-- Dealer rail: a small back control + discard (left), shoe (right).
+             No full topbar / brand, so the table owns the whole screen. -->
+        <div class="rail">
+          <a class="rail__btn" href="../index.html" aria-label="Back to menu" title="Back to menu"><i class="fas fa-arrow-left"></i></a>
+          <div class="discard" id="discard" title="Discard"><i class="fas fa-layer-group"></i></div>
+          <div class="shoe" id="shoe" title="Shoe">
+            <div class="shoe__deck"></div>
+            <div class="shoe__lip"></div>
+          </div>
+        </div>
+
+
+        <!-- BANKER seat (dealer's left). There is no STAND control: drawing
+             is the only explicit action. Standing is implicit — not taking a
+             card and moving on, exactly as at a real table. -->
+        <div class="seat seat--banker" id="seat-banker">
+          <div class="seat__label">Banker <span class="seat__total" id="banker-total"></span></div>
+          <div class="spots">
+            <button class="spot spot--third" id="banker-card-3" aria-label="Deal Banker third card"></button>
+            <div class="spot" id="banker-card-1"></div>
+            <div class="spot" id="banker-card-2"></div>
+          </div>
+        </div>
+
+        <!-- PLAYER seat (dealer's right). -->
+        <div class="seat seat--player" id="seat-player">
+          <div class="seat__label">Player <span class="seat__total" id="player-total"></span></div>
+          <div class="spots">
+            <div class="spot" id="player-card-1"></div>
+            <div class="spot" id="player-card-2"></div>
+            <button class="spot spot--third" id="player-card-3" aria-label="Deal Player third card"></button>
+          </div>
+        </div>
+
+
+        <!-- Bet zones aligned under their hands: Banker (left) / Player (right). -->
+        <div class="betline" id="betline">
+          <button class="bet bet--banker" id="bet-banker"><span>BANKER</span></button>
+          <button class="bet bet--tie" id="bet-tie"><span>TIE</span></button>
+          <button class="bet bet--player" id="bet-player"><span>PLAYER</span></button>
+        </div>
+      </section>
+    </div>
+
+    <footer class="dock">
+      <div class="dock__stats">
+        <span class="statchip">Correct <b id="s-correct">0</b></span>
+        <span class="statchip">Wrong <b id="s-incorrect">0</b></span>
+        <span class="statchip">Hands <b id="s-hands">0</b></span>
+        <span class="statchip">Rate <b id="s-rate">0%</b></span>
+      </div>
+      <span class="dock__spacer"></span>
+      <button class="icon-btn" id="reset-btn" title="Reset stats"><i class="fas fa-rotate-right"></i></button>
+    </footer>
+  </div>
+
+  <div class="feedback" id="feedback"></div>
+
+  <script src="../js/core/cards.js"></script>
+  <script src="../js/core/rules.js"></script>
+  <script src="../js/core/stats.js"></script>
+  <script src="../js/core/ui.js"></script>
+  <script src="dealing.js"></script>
+</body>
+</html>
