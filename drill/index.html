@@ -16,7 +16,7 @@
     <div class="trainer__stage">
       <section class="felt felt--drill" id="felt">
 
-        <!-- Rail: back + category filter -->
+        <!-- Dealer rail: back button + category filter -->
         <div class="drill-rail">
           <a class="icon-btn" href="../index.html" aria-label="Back to menu" title="Back to menu">
             <i class="fas fa-arrow-left"></i>
@@ -28,17 +28,36 @@
           </div>
         </div>
 
-        <!-- Scenario display -->
-        <div class="drill-scenario" id="scenario">
-          <p class="scenario-context" id="scenario-context"></p>
-          <div class="scenario-q" id="scenario-q"></div>
-          <div class="scenario-answer" id="scenario-answer" hidden></div>
+        <!-- BANKER seat — dealer's left.
+             Slot order mirrors the dealing table: 3rd (far left), 1st, 2nd. -->
+        <div class="drill-seat drill-seat--banker">
+          <div class="drill-seat__label">Banker</div>
+          <div class="drill-spots">
+            <div class="drill-slot" id="d-b3"></div>
+            <div class="drill-slot" id="d-b1"></div>
+            <div class="drill-slot" id="d-b2"></div>
+          </div>
         </div>
 
-        <!-- Decision controls — same visual weight; no pre-answer signal -->
-        <div class="drill-controls" id="drill-controls">
-          <button class="drill-btn drill-btn--draw" id="btn-draw">Draw</button>
-          <button class="drill-btn drill-btn--stand" id="btn-stand">Stand</button>
+        <!-- PLAYER seat — dealer's right.
+             Slot order: 1st, 2nd, 3rd (far right). -->
+        <div class="drill-seat drill-seat--player">
+          <div class="drill-seat__label">Player</div>
+          <div class="drill-spots">
+            <div class="drill-slot" id="d-p1"></div>
+            <div class="drill-slot" id="d-p2"></div>
+            <div class="drill-slot" id="d-p3"></div>
+          </div>
+        </div>
+
+        <!-- Foot: question context → feedback → decision buttons -->
+        <div class="drill-foot">
+          <p class="scenario-context" id="scenario-context"></p>
+          <div class="scenario-answer" id="scenario-answer" hidden></div>
+          <div class="drill-controls" id="drill-controls">
+            <button class="drill-btn drill-btn--draw"  id="btn-draw">Draw</button>
+            <button class="drill-btn drill-btn--stand" id="btn-stand">Stand</button>
+          </div>
         </div>
 
       </section>
@@ -47,9 +66,9 @@
     <footer class="dock">
       <div class="dock__stats">
         <span class="statchip">Correct <b id="s-correct">0</b></span>
-        <span class="statchip">Wrong <b id="s-wrong">0</b></span>
-        <span class="statchip">Streak <b id="s-streak">0</b></span>
-        <span class="statchip">Rate <b id="s-rate">0%</b></span>
+        <span class="statchip">Wrong   <b id="s-wrong">0</b></span>
+        <span class="statchip">Streak  <b id="s-streak">0</b></span>
+        <span class="statchip">Rate    <b id="s-rate">0%</b></span>
       </div>
       <span class="dock__spacer"></span>
       <button class="icon-btn" id="reset-btn" title="Reset stats">
