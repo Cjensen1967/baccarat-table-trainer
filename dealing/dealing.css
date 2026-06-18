@@ -21,9 +21,14 @@
     "betline betline";
   gap: 0.5rem;
   padding: 0.7rem 0.9rem 0.9rem;
+  /* Gold table rail — subtle inset border like a felt cushion edge */
+  box-shadow:
+    inset 0 0 0 3px rgba(212, 175, 55, 0.28),
+    inset 0 0 80px rgba(0, 0, 0, 0.25);
 }
 
-/* ---- Dealer rail (back / discard ... shoe) -------------------------- */
+
+/* ---- Dealer rail ---------------------------------------------------- */
 .rail {
   grid-area: rail;
   display: flex;
@@ -33,11 +38,9 @@
   padding: 0 0.3rem;
 }
 
-/* Shoe is pushed to the dealer's right; back + discard stay left. */
-.rail .shoe { margin-left: auto; }
-
 /* Small, unobtrusive back control living on the rail. */
 .rail__btn {
+
   width: 36px;
   height: 36px;
   flex: 0 0 auto;
@@ -54,60 +57,8 @@
 
 .rail__btn:hover { color: var(--gold-400); border-color: var(--gold-500); background: rgba(0, 0, 0, 0.45); }
 
-.discard {
-
-  width: 44px;
-  height: 30px;
-  border-radius: 6px;
-  display: grid;
-  place-items: center;
-  color: var(--cream-dim);
-  background: rgba(0, 0, 0, 0.25);
-  border: 1px dashed rgba(255, 255, 255, 0.18);
-  font-size: 0.9rem;
-}
-
-/* The shoe — a slanted dealing box on the dealer's right. */
-
-.shoe {
-  position: relative;
-  width: 64px;
-  height: 46px;
-  border-radius: 6px 6px 8px 8px;
-  background: linear-gradient(160deg, #2a211a, #15100c);
-  border: 1px solid rgba(212, 175, 55, 0.35);
-  box-shadow: var(--shadow-1);
-  transform: skewX(-10deg);
-  overflow: hidden;
-}
-
-.shoe__deck {
-  position: absolute;
-  inset: 6px 8px auto 8px;
-  height: 18px;
-  background: repeating-linear-gradient(90deg, #efe7d2 0 3px, #cdbf9c 3px 5px);
-  border-radius: 2px;
-  box-shadow: inset 0 -2px 3px rgba(0, 0, 0, 0.4);
-}
-
-.shoe__lip {
-  position: absolute;
-  left: 6px;
-  right: 6px;
-  bottom: 5px;
-  height: 10px;
-  background: linear-gradient(180deg, #3a2e23, #1c1510);
-  border-radius: 0 0 4px 4px;
-  border-top: 1px solid rgba(212, 175, 55, 0.25);
-}
-
-/* Shoe "armed" glow while a deal is being performed by the engine. */
-.shoe.dealing {
-  border-color: var(--gold-400);
-  box-shadow: 0 0 16px var(--gold-glow);
-}
-
 /* ---- Seats ---------------------------------------------------------- */
+
 .seat {
   display: flex;
   flex-direction: column;
@@ -129,13 +80,14 @@
   letter-spacing: 0.16em;
   text-transform: uppercase;
   font-size: 0.95rem;
-  padding: 0.1em 0.8em;
+  padding: 0.15em 0.5em;     /* tighter — fits the text snugly */
   border-radius: 999px;
   border: 1px solid var(--gold-glow);
   display: inline-flex;
-  gap: 0.5em;
+  gap: 0.4em;
   align-items: center;
 }
+
 
 .seat--banker .seat__label { color: #f3c9cf; background: rgba(138, 39, 52, 0.3); }
 .seat--player .seat__label { color: #cfe0f3; background: rgba(42, 94, 148, 0.3); }
@@ -168,7 +120,8 @@
 }
 
 .spot {
-  --card-w: clamp(58px, 14vw, 92px);
+  --card-w: clamp(70px, 16vw, 115px);
+
   width: var(--card-w);
   height: calc(var(--card-w) * 1.45);
   border-radius: 9px;
@@ -305,18 +258,17 @@
     gap: 0.35rem;
     padding: 0.4rem 0.6rem 0.5rem;
   }
-  .spot { --card-w: clamp(60px, 14vw, 96px); }
+  .spot { --card-w: clamp(68px, 16vw, 115px); }
   .seat__label { font-size: 0.82rem; }
   .bet { font-size: 0.84rem; padding: 0.55rem 0.4rem; min-height: 46px; }
-  .shoe { width: 56px; height: 40px; }
-  .discard { width: 38px; height: 26px; }
   .seat { gap: 0.4rem; }
 }
 
 @media (orientation: landscape) and (max-height: 430px) {
-  .spot { --card-w: clamp(52px, 12vw, 80px); }
+  .spot { --card-w: clamp(56px, 13vw, 90px); }
   .bet { min-height: 42px; font-size: 0.8rem; }
 }
+
 
 
 
@@ -333,8 +285,9 @@
       "player"
       "betline";
   }
-  .spot { --card-w: clamp(60px, 20vw, 92px); }
+  .spot { --card-w: clamp(70px, 22vw, 115px); }
   .seat { padding: 0.4rem; }
+
   /* Upright in portrait — the stacked layout has no dealer perspective. */
   .seat__label { transform: none; }
 }

@@ -40,8 +40,8 @@
 
     cache() {
       this.felt = document.getElementById('felt');
-      this.shoeEl = document.getElementById('shoe');
       this.spots = {
+
         p1: document.getElementById('player-card-1'),
         p2: document.getElementById('player-card-2'),
         p3: document.getElementById('player-card-3'),
@@ -107,7 +107,6 @@
         ['p2', this.hand.player[1]],
         ['b2', this.hand.banker[1]],
       ];
-      this.shoeEl.classList.add('dealing');
       order.forEach(([slot, card], i) => {
         setTimeout(() => {
           renderCard(this.spots[slot], card, this.shoe.styleIndex);
@@ -117,8 +116,8 @@
     }
 
     openingDone() {
-      this.shoeEl.classList.remove('dealing');
       this.felt.classList.remove('locked');
+
       this.felt.classList.add('live');
     }
 
@@ -181,10 +180,9 @@
     dealThird(side) {
       const slot = side === 'player' ? this.spots.p3 : this.spots.b3;
       const card = side === 'player' ? this.hand.playerThird : this.hand.bankerThird;
-      this.shoeEl.classList.add('dealing');
       renderCard(slot, card, this.shoe.styleIndex);
-      setTimeout(() => this.shoeEl.classList.remove('dealing'), 300);
     }
+
 
     /* ---- Implicit stand --------------------------------------------- *
      * There is no STAND control. A side "stands" simply by not being dealt
