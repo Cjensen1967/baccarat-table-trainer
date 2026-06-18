@@ -13,6 +13,35 @@
 const SUITS = ['clubs', 'diamonds', 'hearts', 'spades'];
 const RANKS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K'];
 
+/* Weighted rank pool for more challenging training distribution.
+ *
+ * Real-shoe problem: T/J/Q/K are each worth 0 — that's 4 of 13 ranks (30.8%)
+ * producing lots of trivial low totals and fewer conditional Banker decisions.
+ *
+ * Training-optimised pool:
+ *   - Zero-value court cards halved: only T and J (Q and K omitted from draws)
+ *   - Mid-range values 3–7 doubled: these trigger every Banker conditional rule
+ *   - Naturals (8, 9) and low cards (A, 2) kept at 1× — still present
+ *
+ * Pool size: 14 entries.
+ *   Value 0: 2/14 ≈ 14%  (was 4/13 ≈ 31%) — much less filler
+ *   Values 3-7: 2/14 ≈ 14% each             — most rule coverage
+ *   Values 1,2,8,9: 1/14 ≈ 7% each          — still reachable
+ */
+const RANK_POOL = [
+  'T', 'J',    // value 0 — two court cards (halved from four)
+  'A',          // value 1
+  '2',          // value 2
+  '3', '3',    // value 3
+  '4', '4',    // value 4
+  '5', '5',    // value 5
+  '6', '6',    // value 6
+  '7', '7',    // value 7
+  '8',          // value 8 — natural range
+  '9',          // value 9 — natural range
+];
+
+
 /* Asset path is one level up from any module folder (guided/, dealing/).
  * dealing/index.html → ../assets/heartsA.png  ✓
  * guided/index.html  → ../assets/heartsA.png  ✓  */
@@ -56,10 +85,11 @@ class Shoe {
   }
 
   draw() {
-    const rank = RANKS[Math.floor(Math.random() * RANKS.length)];
+    const rank = RANK_POOL[Math.floor(Math.random() * RANK_POOL.length)];
     const suit = SUITS[Math.floor(Math.random() * SUITS.length)];
     return new Card(rank, suit);
   }
+
 }
 
 /* Render a card image into a slot element.

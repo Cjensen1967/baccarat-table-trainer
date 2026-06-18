@@ -1,0 +1,321 @@
+/* =====================================================================
+ * commission.css — Commission Drill.
+ * =================================================================== */
+
+:root { color-scheme: dark; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  min-height: 100dvh;
+  background:
+    radial-gradient(ellipse 90% 55% at 50% 0%,
+      rgba(17, 60, 36, 0.5) 0%,
+      rgba(6, 11, 8, 1) 60%);
+  color: var(--cream);
+  font-family: var(--font-ui);
+}
+
+.cm-app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+/* ---- Header --------------------------------------------------------- */
+.cm-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.7rem 0.9rem;
+  background: rgba(6, 11, 8, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+}
+
+.cm-header__titles { flex: 1; min-width: 0; }
+
+.cm-title {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold-300);
+  line-height: 1;
+}
+
+.cm-subtitle {
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  margin-top: 0.18rem;
+}
+
+/* ---- Main ----------------------------------------------------------- */
+.cm-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.9rem;
+  padding: 1.2rem 1rem 1.4rem;
+}
+
+/* ---- Wager display -------------------------------------------------- */
+.cm-wager-card {
+  background:
+    radial-gradient(ellipse 80% 70% at 50% 0%,
+      rgba(212, 175, 55, 0.15) 0%, transparent 65%),
+    rgba(0, 0, 0, 0.45);
+  border: 1px solid var(--gold-glow);
+  border-radius: var(--radius-lg);
+  padding: 1.4rem 1.5rem 1.2rem;
+  text-align: center;
+  box-shadow: 0 0 40px rgba(212,175,55,0.08);
+}
+
+.cm-wager-label {
+  display: block;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.4rem;
+}
+
+.cm-wager-amount {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 8vw, 3.2rem);
+  color: var(--gold-300);
+  letter-spacing: 0.04em;
+  line-height: 1;
+  animation: cm-pop 0.32s var(--ease);
+}
+
+@keyframes cm-pop {
+  from { transform: scale(0.92); opacity: 0.4; }
+  to   { transform: scale(1);    opacity: 1;   }
+}
+
+/* ---- Step cards ----------------------------------------------------- */
+.cm-step {
+  background: rgba(0, 0, 0, 0.38);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 1rem 1rem 0.85rem;
+  transition: opacity var(--t) var(--ease), filter var(--t) var(--ease);
+}
+
+.cm-step--locked {
+  opacity: 0.5;
+  pointer-events: none;
+  filter: grayscale(0.35);
+}
+
+.cm-step--done {
+  border-color: rgba(47, 191, 107, 0.4);
+  background: rgba(47, 191, 107, 0.05);
+}
+
+.cm-step__head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  margin-bottom: 0.7rem;
+}
+
+.cm-step__num {
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: rgba(212,175,55,0.12);
+  border: 1px solid rgba(212,175,55,0.25);
+  border-radius: 999px;
+  padding: 0.1em 0.55em;
+}
+
+.cm-step__title {
+  font-family: var(--font-display);
+  font-size: 0.88rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cream-dim);
+}
+
+/* ---- Input row ------------------------------------------------------ */
+.cm-input-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cm-currency {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  color: var(--gold-400);
+  flex-shrink: 0;
+  width: 1em;
+  text-align: center;
+}
+
+.cm-input {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--cream);
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  letter-spacing: 0.04em;
+  padding: 0.55rem 0.75rem;
+  outline: none;
+  appearance: textfield;
+  -moz-appearance: textfield;
+  transition: border-color var(--t-fast) var(--ease);
+  min-width: 0;
+}
+
+.cm-input::-webkit-inner-spin-button,
+.cm-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+
+.cm-input:focus { border-color: var(--gold-500); }
+
+.cm-input.is-wrong { border-color: var(--incorrect); }
+.cm-input.is-correct { border-color: var(--correct); }
+
+.cm-check-btn {
+  flex-shrink: 0;
+  padding: 0.6rem 1.1rem;
+  border: 1px solid var(--gold-400);
+  border-radius: var(--radius);
+  background: rgba(212, 175, 55, 0.12);
+  color: var(--gold-300);
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background var(--t-fast) var(--ease), transform var(--t-fast) var(--ease);
+}
+
+.cm-check-btn:hover:not(:disabled) { background: rgba(212,175,55,0.2); transform: translateY(-1px); }
+.cm-check-btn:active:not(:disabled) { transform: none; }
+.cm-check-btn:disabled { opacity: 0.35; cursor: default; }
+
+/* ---- Result feedback ------------------------------------------------ */
+.cm-result {
+  margin-top: 0.55rem;
+  padding: 0.4rem 0.7rem;
+  border-radius: var(--radius);
+  font-size: 0.84rem;
+  line-height: 1.4;
+  animation: sr-pop 0.22s var(--ease);
+}
+
+.cm-result--wrong {
+  background: rgba(224, 85, 107, 0.1);
+  border: 1px solid rgba(224, 85, 107, 0.35);
+  color: var(--incorrect);
+}
+
+.cm-result--correct {
+  background: rgba(47, 191, 107, 0.1);
+  border: 1px solid rgba(47, 191, 107, 0.35);
+  color: var(--correct);
+}
+
+/* ---- Next button ---------------------------------------------------- */
+.cm-next-btn {
+  margin-top: 0.3rem;
+  animation: sr-pop 0.3s var(--ease);
+}
+
+/* ---- Stats dock ----------------------------------------------------- */
+.cm-dock {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 1rem;
+  border-top: 1px solid var(--line);
+  background: rgba(0, 0, 0, 0.3);
+  flex-wrap: wrap;
+}
+
+.cm-statchip {
+  font-size: 0.78rem;
+  color: var(--cream-dim);
+}
+
+.cm-statchip b {
+  color: var(--gold-400);
+  font-family: var(--font-display);
+  font-size: 0.92rem;
+  margin-left: 0.2em;
+}
+
+.cm-dock__spacer { flex: 1; }
+
+/* ---- Hint / rules panel -------------------------------------------- */
+.cm-hint-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 50;
+}
+
+.cm-hint {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(520px, 100vw);
+  background: var(--ink-800);
+  border: 1px solid var(--gold-glow);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  padding: 1.4rem 1.4rem 1.8rem;
+  z-index: 51;
+  animation: slideUp 0.3s var(--ease);
+}
+
+@keyframes slideUp {
+  from { transform: translateX(-50%) translateY(100%); }
+  to   { transform: translateX(-50%) translateY(0); }
+}
+
+.cm-hint__title {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold-300);
+  margin-bottom: 0.9rem;
+}
+
+.cm-hint__body {
+  font-size: 0.88rem;
+  color: var(--cream-dim);
+  line-height: 1.65;
+}
+
+.cm-hint__body kbd {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0.1em 0.4em;
+  font-size: 0.82em;
+  color: var(--cream);
+}
+
+.cm-hint__close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+}

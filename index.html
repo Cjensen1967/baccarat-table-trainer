@@ -86,11 +86,19 @@
       },
 
       {
+        id: 'commission', live: true, level: 'Drill', icon: '💰',
+        title: 'Commission Drill', accent: 'var(--gold-500)',
+        desc: 'Practice the two-step 5% Banker payout calculation. Random bet amounts from $25 to $1,000 until the math is automatic.',
+        href: 'commission/index.html'
+      },
+
+      {
         id: 'test', live: true, level: 'Assessment', icon: '🏅',
         title: 'Test Mode', accent: 'var(--gold-500)',
         desc: 'Work through complete hands — Player, Banker, then call the winner. Score at the end with a full missed-hand review.',
         href: 'test/index.html', statsKey: 'bac_stats_test'
       },
+
 
       {
         id: 'review', live: true, level: 'Review', icon: '🔁',
@@ -136,8 +144,20 @@
           return `<div class="module-card__stat"><b>${h}</b> hands · <b>${Math.round(c/t*100)}%</b> overall accuracy</div>`;
         } catch(e) { return '<div class="module-card__stat">Tap to view stats</div>'; }
       }
+      // Commission card: show hands + accuracy from bac_stats_commission
+      if (m.id === 'commission') {
+        try {
+          const d = JSON.parse(localStorage.getItem('bac_stats_commission') || '{}');
+          const h = d.hands || 0;
+          const c = d.correct || 0, w = d.wrong || 0;
+          if (h === 0) return '<div class="module-card__stat">No sessions yet — start training</div>';
+          const rate = (c+w) ? Math.round(c/(c+w)*100) : 0;
+          return `<div class="module-card__stat"><b>${h}</b> hands · <b>${rate}%</b> accuracy</div>`;
+        } catch(e) { return '<div class="module-card__stat">Tap to train</div>'; }
+      }
       // Review card: show live count of accumulated missed hands
       if (m.id === 'review') {
+
 
         try {
           const arr = JSON.parse(localStorage.getItem('bac_missed_hands') || '[]');

@@ -25,25 +25,34 @@
 
   const SUITS = ['clubs', 'diamonds', 'hearts', 'spades'];
 
-  const RANKS_BY_VALUE = [
-    ['T', 'J', 'Q', 'K'], // 0
-    ['A'],                  // 1
-    ['2'], ['3'], ['4'], ['5'], ['6'], ['7'], ['8'], ['9']
-  ];
-
   const RANK_DISPLAY = { A: 'A', T: '10', J: 'J', Q: 'Q', K: 'K' };
 
+  /* Weighted card pool — mirrors js/core/cards.js RANK_POOL.
+   * Zero-value court cards halved (T, J only); mid-range 3-7 doubled.
+   * Each entry: [rank, baccarat-value].  */
+  const CARD_POOL = [
+    ['T', 0], ['J', 0],   // value 0 — two court cards (was four)
+    ['A', 1],              // value 1
+    ['2', 2],              // value 2
+    ['3', 3], ['3', 3],   // value 3 — doubled
+    ['4', 4], ['4', 4],   // value 4 — doubled
+    ['5', 5], ['5', 5],   // value 5 — doubled
+    ['6', 6], ['6', 6],   // value 6 — doubled
+    ['7', 7], ['7', 7],   // value 7 — doubled
+    ['8', 8],              // value 8 — natural
+    ['9', 9],              // value 9 — natural
+  ];
+
   function rndCard() {
-    const v    = Math.floor(Math.random() * 10);
-    const rnks = RANKS_BY_VALUE[v];
-    const r    = rnks[Math.floor(Math.random() * rnks.length)];
-    const s    = SUITS[Math.floor(Math.random() * SUITS.length)];
+    const [r, v] = CARD_POOL[Math.floor(Math.random() * CARD_POOL.length)];
+    const s = SUITS[Math.floor(Math.random() * SUITS.length)];
     return {
       value: v,
       imagePath: `../assets/${s}${r}.png`,
       display: (RANK_DISPLAY[r] || r) + suitSymbol(s)
     };
   }
+
 
   function suitSymbol(s) {
     return { clubs: '♣', diamonds: '♦', hearts: '♥', spades: '♠' }[s];

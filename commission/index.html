@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, shrink-to-fit=no" />
+  <title>Commission Drill · Baccarat Table Trainer</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="../css/variables.css" />
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="commission.css" />
+  <script src="../js/core/gate.js"></script>
+</head>
+<body>
+  <div class="cm-app">
+
+    <!-- Header rail -->
+    <header class="cm-header">
+      <a class="icon-btn" href="../index.html" aria-label="Back to menu">
+        <i class="fas fa-arrow-left"></i>
+      </a>
+      <div class="cm-header__titles">
+        <h1 class="cm-title">Commission Drill</h1>
+        <p class="cm-subtitle">5% Banker commission · two-step calculation</p>
+      </div>
+      <button class="icon-btn cm-rules-btn" id="cm-rules-btn" title="How it works">
+        <i class="fas fa-circle-question"></i>
+      </button>
+    </header>
+
+    <!-- Main drill area -->
+    <main class="cm-main">
+
+      <!-- Wager card -->
+      <div class="cm-wager-card">
+        <span class="cm-wager-label">Banker Bet</span>
+        <span class="cm-wager-amount" id="cm-wager">$100.00</span>
+      </div>
+
+      <!-- Step 1: Commission -->
+      <div class="cm-step" id="step-commission">
+        <div class="cm-step__head">
+          <span class="cm-step__num">Step 1</span>
+          <span class="cm-step__title">5% Commission</span>
+        </div>
+        <div class="cm-input-row">
+          <span class="cm-currency">$</span>
+          <input
+            class="cm-input"
+            id="commission-input"
+            type="number"
+            inputmode="decimal"
+            step="0.01"
+            min="0"
+            placeholder="0.00"
+            autocomplete="off"
+          />
+          <button class="cm-check-btn" id="commission-check-btn">Check</button>
+        </div>
+        <div class="cm-result" id="commission-result" hidden></div>
+      </div>
+
+      <!-- Step 2: Net Payout -->
+      <div class="cm-step cm-step--locked" id="step-payout">
+        <div class="cm-step__head">
+          <span class="cm-step__num">Step 2</span>
+          <span class="cm-step__title">Net Payout to Player</span>
+        </div>
+        <div class="cm-input-row">
+          <span class="cm-currency">$</span>
+          <input
+            class="cm-input"
+            id="payout-input"
+            type="number"
+            inputmode="decimal"
+            step="0.01"
+            min="0"
+            placeholder="0.00"
+            autocomplete="off"
+            disabled
+          />
+          <button class="cm-check-btn" id="payout-check-btn" disabled>Check</button>
+        </div>
+        <div class="cm-result" id="payout-result" hidden></div>
+      </div>
+
+      <!-- Next button (shown after step 2 correct) -->
+      <button class="btn btn--gold btn--lg cm-next-btn" id="cm-next-btn" hidden>
+        Next Hand <i class="fas fa-arrow-right"></i>
+      </button>
+
+    </main>
+
+    <!-- Stats dock -->
+    <footer class="cm-dock">
+      <span class="cm-statchip">Correct <b id="cm-correct">0</b></span>
+      <span class="cm-statchip">Wrong <b id="cm-wrong">0</b></span>
+      <span class="cm-statchip">Hands <b id="cm-hands">0</b></span>
+      <span class="cm-dock__spacer"></span>
+      <button class="icon-btn" id="cm-reset-btn" title="Reset stats">
+        <i class="fas fa-rotate-right"></i>
+      </button>
+    </footer>
+
+  </div>
+
+  <!-- Rules hint panel -->
+  <div class="cm-hint-backdrop" id="cm-hint-backdrop" hidden></div>
+  <div class="cm-hint" id="cm-hint" hidden>
+    <button class="btn btn--ghost cm-hint__close" id="cm-hint-close">
+      <i class="fas fa-xmark"></i>
+    </button>
+    <h3 class="cm-hint__title">How Commission Works</h3>
+    <p class="cm-hint__body">
+      Baccarat pays a 5% commission on all winning Banker bets.<br><br>
+      <b>Step 1 — Commission:</b> multiply the Banker bet by 5% (× 0.05).<br>
+      <b>Step 2 — Net payout:</b> subtract the commission from the original bet.<br><br>
+      Example: $200 bet → commission $10.00 → net payout $190.00.<br><br>
+      Round to the nearest cent. Use the <kbd>Enter</kbd> key or the Check button to submit each step.
+    </p>
+  </div>
+
+  <script src="commission.js"></script>
+</body>
+</html>
