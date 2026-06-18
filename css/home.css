@@ -120,6 +120,12 @@
   border-color: var(--correct);
 }
 
+.module-card__tag.progress {
+  color: #f5b942;
+  border-color: #f5b942;
+}
+
+
 .module-card__title {
   font-size: 1.2rem;
   color: var(--cream);

@@ -79,11 +79,12 @@
         href: 'dealing/index.html', statsKey: 'bac_stats_dealing'
       },
       {
-        id: 'drill', live: true, level: 'Drill', icon: '⚡',
+        id: 'drill', live: true, status: 'progress', level: 'Drill', icon: '⚡',
         title: 'Drill Mode', accent: 'var(--gold-500)',
         desc: 'Rapid-fire single decisions — Player draw/stand, Banker conditional draws. Filter by category.',
         href: 'drill/index.html', statsKey: 'bac_stats_drill'
       },
+
 
       {
         id: 'commission', live: true, level: 'Drill', icon: '💰',
@@ -94,11 +95,12 @@
       },
 
       {
-        id: 'test', live: true, level: 'Assessment', icon: '🏅',
+        id: 'test', live: true, status: 'progress', level: 'Assessment', icon: '🏅',
         title: 'Test Mode', accent: 'var(--gold-500)',
         desc: 'Work through complete hands — Player, Banker, then call the winner. Score at the end with a full missed-hand review.',
         href: 'test/index.html', statsKey: 'bac_stats_test'
       },
+
 
 
       {
@@ -176,9 +178,12 @@
       const grid = document.getElementById('modules');
       grid.innerHTML = MODULES.map(m => {
         const cls = m.live ? 'module-card module-card--live' : 'module-card module-card--soon';
-        const tag = m.live
-          ? '<span class="module-card__tag live">Ready</span>'
-          : '<span class="module-card__tag">Soon</span>';
+        const tag = !m.live
+          ? '<span class="module-card__tag">Soon</span>'
+          : m.status === 'progress'
+            ? '<span class="module-card__tag progress">In Progress</span>'
+            : '<span class="module-card__tag live">Ready</span>';
+
         const inner = `
           <div class="module-card__top">
             <span class="module-card__icon">${m.icon}</span>
