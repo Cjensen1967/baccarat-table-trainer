@@ -118,13 +118,18 @@
 
   <script>
     (function () {
-      var FLAG = 'bac_exp_disclaimer_accepted';
+      /* Must match the FLAG in gate.js */
+      var FLAG = 'bac_disclaimer_v1';
+
+      /* The project root directory — the same folder disclaimer.html lives in.
+       * Computed once from our own URL so it works on GitHub Pages and localhost. */
+      var basePath = window.location.pathname.replace(/[^/]+\.html(\?.*)?$/, '');
+      // '/baccarat-table-trainer/' · or '/' on localhost
 
       function safeNext() {
         var raw = new URLSearchParams(window.location.search).get('next') || 'index.html';
         try { raw = decodeURIComponent(raw); } catch (e) {}
-        // Only allow relative paths INSIDE the experimental app — never an
-        // absolute URL, protocol, or parent escape back to the old root.
+        // Only allow safe relative paths — no protocol, no leading slash, no ..
         if (/^[a-z]+:/i.test(raw) || raw.charAt(0) === '/' || raw.indexOf('..') !== -1) {
           return 'index.html';
         }
@@ -132,16 +137,22 @@
       }
 
       document.getElementById('accept').addEventListener('click', function () {
-        sessionStorage.setItem(FLAG, 'true');
-        window.location.replace(safeNext());
+        /* Set flag in BOTH storage types so it survives:
+         *   - new tabs (localStorage)
+         *   - iOS standalone web-app launches (localStorage)
+         *   - strict private browsing: both may throw — that's caught in gate.js */
+        try { sessionStorage.setItem(FLAG, 'true'); } catch (e) {}
+        try { localStorage.setItem(FLAG, 'true');   } catch (e) {}
+
+        /* Redirect using an absolute URL to avoid relative-path quirks. */
+        window.location.replace(window.location.origin + basePath + safeNext());
       });
 
       document.getElementById('decline').addEventListener('click', function () {
-        // Leave the experimental app entirely.
         window.location.replace('about:blank');
-
       });
     })();
   </script>
+
 </body>
 </html>
