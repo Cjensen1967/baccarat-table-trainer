@@ -2,7 +2,8 @@
  * commission.js — Commission Drill.
  *
  * Drill flow:
- *   1. Show a random Banker bet ($25–$1000, $5 increments).
+ *   1. Show a random Banker bet ($25–$500, $5 increments).
+
  *   2. Step 1: Trainee types the 5% commission and submits.
  *      - Wrong: highlight input red, show "Incorrect — try again".
  *      - Correct: green border, unlock Step 2.
@@ -21,11 +22,13 @@
   'use strict';
 
   /* ==================================================================
-   * Wager generation: $25–$1000 in $5 increments
+   * Wager generation: $25–$500 in $5 increments
    * ================================================================== */
+
   const MIN    = 25;
-  const MAX    = 1000;
+  const MAX    = 500;
   const STEP   = 5;
+
 
   function generateWager() {
     const steps = (MAX - MIN) / STEP;
