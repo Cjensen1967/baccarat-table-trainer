@@ -48,7 +48,8 @@
     const s = SUITS[Math.floor(Math.random() * SUITS.length)];
     return {
       value: v,
-      imagePath: `../assets/${s}${r}.png`,
+      imagePath: `../assets/${s}${r}.svg`,
+
       display: (RANK_DISPLAY[r] || r) + suitSymbol(s)
     };
   }

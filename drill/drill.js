@@ -46,7 +46,8 @@
     const suit  = SUITS[Math.floor(Math.random() * SUITS.length)];
     return {
       value: v,
-      imagePath: `../assets/${suit}${rank}.png`,
+      imagePath: `../assets/${suit}${rank}.svg`,
+
       label: (RANK_NAMES[rank] || rank) + ' of ' + suit
     };
   }

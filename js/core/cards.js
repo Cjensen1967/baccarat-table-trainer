@@ -3,7 +3,8 @@
  * Baccarat Table Trainer — standalone build.
  *
  * Card art lives in /assets/ at the project root.
- * Images follow the [suit][rank].png naming convention, e.g. hearts7.png.
+ * Images follow the [suit][rank].svg naming convention, e.g. hearts7.svg.
+
  *
  * NOTE: This is a workflow/rules trainer, not a casino simulator.
  * We intentionally use a simple varied random flow of cards rather than
@@ -43,8 +44,9 @@ const RANK_POOL = [
 
 
 /* Asset path is one level up from any module folder (guided/, dealing/).
- * dealing/index.html → ../assets/heartsA.png  ✓
- * guided/index.html  → ../assets/heartsA.png  ✓  */
+ * dealing/index.html → ../assets/heartsA.svg  ✓
+ * guided/index.html  → ../assets/heartsA.svg  ✓  */
+
 const ASSET_BASE = '../assets';
 
 /**
@@ -65,7 +67,8 @@ class Card {
   }
 
   imagePath() {
-    return `${ASSET_BASE}/${this.suit}${this.rank}.png`;
+    return `${ASSET_BASE}/${this.suit}${this.rank}.svg`;
+
   }
 
   label() {
