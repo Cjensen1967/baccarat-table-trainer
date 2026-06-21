@@ -181,13 +181,15 @@ input[type="checkbox"] {
  * GAME SCREEN
  * =================================================================== */
 
-.au-game {
+/* :not([hidden]) ensures display:flex doesn't override the [hidden] UA style */
+.au-game:not([hidden]) {
   display: flex;
   flex-direction: column;
   height: 100vh;
   height: 100dvh;
   overflow: hidden;
 }
+
 
 
 /* =====================================================================
