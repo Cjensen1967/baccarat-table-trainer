@@ -178,11 +178,27 @@ input[type="checkbox"] {
 
 
 /* =====================================================================
+ * GLOBAL: reinforce [hidden] — CSS display rules on .au-btn, .au-game,
+ * etc. can override the UA stylesheet's display:none for [hidden].
+ * This one rule fixes every au-* element on this page.
+ * =================================================================== */
+#phase-start[hidden],
+#phase-game[hidden],
+#au-btn-replay[hidden],
+#au-btn-next[hidden],
+#au-explain[hidden],
+#au-timer-wrap[hidden],
+#au-peek-chip[hidden] {
+  display: none !important;
+}
+
+/* =====================================================================
  * GAME SCREEN
  * =================================================================== */
 
 /* :not([hidden]) ensures display:flex doesn't override the [hidden] UA style */
 .au-game:not([hidden]) {
+
   display: flex;
   flex-direction: column;
   height: 100vh;
