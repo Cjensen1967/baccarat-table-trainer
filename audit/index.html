@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, shrink-to-fit=no" />
+  <title>Audit Trainer · Baccarat Table Trainer</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="../css/variables.css" />
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/table.css" />
+  <link rel="stylesheet" href="audit.css" />
+  <script src="../js/core/gate.js"></script>
+</head>
+<body>
+<div id="trainer">
+
+  <!-- ================================================================
+       PHASE: LEVEL SELECT
+  ================================================================ -->
+  <div class="au-start" id="phase-start">
+    <header class="au-start__hd">
+      <a class="icon-btn" href="../index.html" aria-label="Back to menu">
+        <i class="fas fa-arrow-left"></i>
+      </a>
+      <div>
+        <h1 class="au-start__title">Audit Trainer</h1>
+        <p class="au-start__sub">Review completed hands as a floor supervisor or surveillance operator.</p>
+      </div>
+    </header>
+
+    <p class="au-start__instruct">
+      All cards are face-up. A winner has been declared.
+      Decide whether the hand was played and called correctly.
+    </p>
+
+    <div class="au-level-grid">
+
+      <button class="au-level-card" data-level="1">
+        <span class="au-level-card__num">Level 1</span>
+        <span class="au-level-card__name">Winner Recognition</span>
+        <span class="au-level-card__desc">All procedure correct — only the declared winner may be wrong. Totals visible.</span>
+      </button>
+
+      <button class="au-level-card" data-level="2">
+        <span class="au-level-card__num">Level 2</span>
+        <span class="au-level-card__name">Player Draw Errors</span>
+        <span class="au-level-card__desc">Adds Player third-card procedure mistakes. Totals hidden.</span>
+      </button>
+
+      <button class="au-level-card" data-level="3">
+        <span class="au-level-card__num">Level 3</span>
+        <span class="au-level-card__name">Banker Draw Errors</span>
+        <span class="au-level-card__desc">Includes the conditional Banker rules — the hardest call. Totals hidden.</span>
+      </button>
+
+      <button class="au-level-card au-level-card--surv" data-level="4">
+        <span class="au-level-card__num">Level 4</span>
+        <span class="au-level-card__name">Surveillance Mode</span>
+        <span class="au-level-card__desc">Cards visible for a limited time, then blur. Decide from memory.</span>
+      </button>
+
+    </div><!-- /.au-level-grid -->
+
+    <div class="au-options">
+
+      <label class="au-opt-row">
+        <input type="checkbox" id="au-show-totals" checked />
+        <span>Show hand totals during Level 1</span>
+        <span class="au-opt-note">(hidden by default in Levels 2–4)</span>
+      </label>
+
+      <div class="au-opt-row">
+        <span class="au-opt-lbl">Level 4 viewing time:</span>
+        <div class="au-seg" id="au-timer-seg">
+          <button class="au-seg-btn" data-val="5">5 s</button>
+          <button class="au-seg-btn au-seg-btn--active" data-val="8">8 s</button>
+          <button class="au-seg-btn" data-val="12">12 s</button>
+        </div>
+      </div>
+
+    </div><!-- /.au-options -->
+  </div><!-- /#phase-start -->
+
+
+  <!-- ================================================================
+       PHASE: GAME TABLE
+  ================================================================ -->
+  <div class="au-game" id="phase-game" hidden>
+
+    <!-- ---- Felt table ------------------------------------------------ -->
+    <section class="felt felt--audit" id="au-felt">
+
+      <!-- Rail: back btn + level badge -->
+      <div class="au-rail">
+        <button class="au-rail__btn" id="au-back-btn" title="Back to level select">
+          <i class="fas fa-arrow-left"></i>
+        </button>
+        <span class="au-level-badge" id="au-level-badge">Level 1</span>
+      </div>
+
+      <!-- Timer bar (Level 4 only — set width 100%→0 via JS transition) -->
+      <div class="au-timer-wrap" id="au-timer-wrap" hidden>
+        <div class="au-timer-bar" id="au-timer-bar"></div>
+      </div>
+
+      <!-- BANKER seat — dealer's left, labels rotated 180° (dealer view) -->
+      <div class="au-seat au-seat--banker">
+        <div class="au-seat__label">
+          Banker <span class="au-seat__total" id="au-banker-total"></span>
+        </div>
+        <div class="au-spots">
+          <!-- Third card slot first (leftmost on table) -->
+          <div class="au-spot au-spot--third" id="au-b3"></div>
+          <div class="au-spot" id="au-b1"></div>
+          <div class="au-spot" id="au-b2"></div>
+        </div>
+      </div>
+
+      <!-- PLAYER seat — dealer's right -->
+      <div class="au-seat au-seat--player">
+        <div class="au-seat__label">
+          Player <span class="au-seat__total" id="au-player-total"></span>
+        </div>
+        <div class="au-spots">
+          <div class="au-spot" id="au-p1"></div>
+          <div class="au-spot" id="au-p2"></div>
+          <!-- Third card slot last (rightmost on table) -->
+          <div class="au-spot au-spot--third" id="au-p3"></div>
+        </div>
+      </div>
+
+      <!-- Declared winner banner + highlighted bet zones -->
+      <div class="au-declare">
+        <span class="au-declare__text" id="au-declare-text">BANKER WINS</span>
+      </div>
+
+      <div class="au-betline">
+        <div class="au-bet au-bet--banker" id="au-bet-banker"><span>BANKER</span></div>
+        <div class="au-bet au-bet--tie"    id="au-bet-tie"><span>TIE</span></div>
+        <div class="au-bet au-bet--player" id="au-bet-player"><span>PLAYER</span></div>
+      </div>
+
+    </section><!-- /.felt -->
+
+    <!-- ---- Decision area -------------------------------------------- -->
+    <div class="au-decision" id="au-decision">
+
+      <div class="au-btns" id="au-btns">
+        <button class="au-btn au-btn--correct" id="au-btn-correct">
+          <i class="fas fa-check-circle"></i> Correct
+        </button>
+        <button class="au-btn au-btn--error" id="au-btn-error">
+          <i class="fas fa-times-circle"></i> Error
+        </button>
+      </div>
+
+      <!-- Level 4 only: single replay at cost of one peek stat -->
+      <button class="au-btn au-btn--replay" id="au-btn-replay" hidden>
+        <i class="fas fa-rotate"></i> Replay <span class="au-btn-note">(counts as peek)</span>
+      </button>
+
+      <!-- Post-answer explanation (hidden until answered) -->
+      <div class="au-explain" id="au-explain" hidden></div>
+
+      <button class="au-btn au-btn--next" id="au-btn-next" hidden>
+        Next Hand &nbsp;<i class="fas fa-arrow-right"></i>
+      </button>
+
+    </div><!-- /.au-decision -->
+
+    <!-- ---- Stats dock ------------------------------------------------ -->
+    <footer class="au-dock">
+      <div class="au-dock__stats">
+        <span class="statchip">Correct <b id="au-s-correct">0</b></span>
+        <span class="statchip">Wrong <b id="au-s-wrong">0</b></span>
+        <span class="statchip">Hands <b id="au-s-hands">0</b></span>
+        <span class="statchip">Rate <b id="au-s-rate">0%</b></span>
+        <span class="statchip" id="au-peek-chip" hidden>Peeks <b id="au-s-peeks">0</b></span>
+      </div>
+      <span class="au-dock__spacer"></span>
+      <button class="icon-btn" id="au-reset-btn" title="Reset stats">
+        <i class="fas fa-rotate-right"></i>
+      </button>
+    </footer>
+
+  </div><!-- /#phase-game -->
+
+</div><!-- /#trainer -->
+
+<script src="../js/core/cards.js"></script>
+<script src="audit.js"></script>
+</body>
+</html>
