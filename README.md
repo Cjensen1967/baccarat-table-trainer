@@ -23,7 +23,7 @@ Clone or download this repository, then serve its root directory using any stati
 python -m http.server 8000
 ```
 
-Open http://localhost:8000/ in a browser. No build system or package installation is required. The interface loads Font Awesome from a CDN, so those icons require network access.
+Open http://localhost:8000/ in a browser. No build system or package installation is required. The interface loads Font Awesome from a third-party CDN, so those icons require network access. The CDN provider receives standard browser request information, such as IP address and user-agent.
 
 ## Training assumptions
 
@@ -38,6 +38,10 @@ Training progress and missed hands are stored in your browser's localStorage. Th
 ## Source and reuse
 
 The application source code is available under the [MIT License](LICENSE), copyright (c) 2026 Cjensen1967. Card-face artwork originates from Byron Knoll's public-domain vector-playing-cards project (https://code.google.com/archive/p/vector-playing-cards/); the SVG files retain their original source comments. The unverified card-back SVG was removed. Third-party assets and services, including Font Awesome loaded from a CDN, remain subject to their own terms.
+
+## Maintenance and verification
+
+Run `node --test tests/rules.test.cjs` to validate drawing rules. GitHub Actions also checks JavaScript syntax and asset references on pushes to `master` and on pull requests. This project uses weighted random card generation for practice, not real-shoe probabilities.
 
 ## Contributing
 
