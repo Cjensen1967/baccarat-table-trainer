@@ -1,76 +1,56 @@
 # Baccarat Table Trainer
 
-A modern, mobile-first baccarat dealing and rules trainer designed to feel like a real table from the dealer's perspective — especially in phone landscape mode.
+A free browser-based baccarat dealing and rules trainer, designed for phone landscape, tablet, and desktop.
 
-**Live demo:** https://cjensen1967.github.io/baccarat-table-trainer/
+**Try it:** https://cjensen1967.github.io/baccarat-table-trainer/
 
----
+## Training modules
 
-## Modules
+- **Guided Trainer:** coached third-card decisions and explanations.
+- **Real Dealing Trainer:** practice dealing and declaring outcomes without prompts.
+- **Drill Mode:** focused drawing-rule decisions.
+- **Commission Drill:** practice 5% Banker commission and payout calculations.
+- **Test Mode:** complete-hand assessments with missed-hand review.
+- **Audit Trainer:** identify procedural and winner-declaration mistakes.
+- **Missed Hands:** revisit previously incorrect decisions.
+- **Progress:** browser-local performance summaries.
 
-| Module | Status | Description |
-|--------|--------|-------------|
-| **Guided Trainer** (L1) | ✅ Ready | Step-by-step coached walk-through of every decision. Teaches the third-card sequence with prompts, hints, and a rules reference. |
-| **Real Dealing Trainer** (L2) | ✅ Ready | No prompts. Work the hand exactly as you would at a live table — deal cards, call the result, get caught on mistakes. |
-| Drill Mode | 🔜 Soon | Rapid-fire single-decision drills to sharpen specific rules. |
-| Test Mode | 🔜 Soon | Timed, no-peek assessment with a final score. |
-| Missed Hands | 🔜 Soon | Replay and study the hands you got wrong. |
-| Progress / Stats | 🔜 Soon | Track accuracy and streaks across every mode. |
+## Run locally
 
----
+Clone or download this repository, then serve its root directory using any static web server, for example:
 
-## Design principles
-
-- **Phone landscape is the primary training layout.** A phone on its side is roughly the shape of a baccarat table. The app takes advantage of that — Banker left, Player right, dealer's perspective.
-- **No answer leakage.** Controls, card spots, and visual cues never reveal the correct action before the trainee commits a decision. Feedback appears only after the trainee acts.
-- **Implicit stand (L2).** There is no STAND button. Not dealing a card and moving on *is* standing — exactly as at a real table. The engine catches the mistake of standing when a draw was required at the next forward action.
-- **Rules trainer, not a casino simulator.** Cards are drawn randomly from an infinite 52-card space. No shoe depletion, burn cards, or penetration tracking.
-
----
-
-## Baccarat drawing rules
-
-**Player**
-- 0–5: Draw a third card
-- 6–7: Stand
-- 8–9: Natural (no further cards)
-
-**Banker** (after Player acts)
-- If Player stood, Banker follows the same 0–5 draw / 6–7 stand rule
-- 0–2: Always draw
-- 3: Draw unless Player's third card was 8
-- 4: Draw if Player's third card was 2–7
-- 5: Draw if Player's third card was 4–7
-- 6: Draw if Player's third card was 6–7
-- 7: Stand
-- 8–9: Natural (no further cards)
-
----
-
-## Project structure
-
-```
-baccarat-table-trainer/
-├── index.html          Dashboard / home
-├── disclaimer.html     Age/disclaimer gate
-├── assets/             52 card images (suit+rank.png)
-├── css/
-│   ├── variables.css   Design tokens
-│   ├── base.css        Global reset + shared components
-│   ├── table.css       Felt layout + responsive breakpoints
-│   └── home.css        Dashboard styles
-├── js/core/
-│   ├── cards.js        Card model, shoe, rendering
-│   ├── rules.js        Baccarat draw rules + outcome logic
-│   ├── stats.js        localStorage stats tracking
-│   ├── ui.js           Feedback, sheet, active-state helpers
-│   └── gate.js         Disclaimer gate
-├── guided/             Guided Trainer (L1)
-└── dealing/            Real Dealing Trainer (L2)
+```sh
+python -m http.server 8000
 ```
 
----
+Open http://localhost:8000/ in a browser. No build system or package installation is required. The interface loads Font Awesome from a CDN, so those icons require network access.
 
-## Development notes
+## Training assumptions
 
-Spawned from the [Bac_suite_codex](https://github.com/Cjensen1967/Bac_suite_codex) experimental build. Pure HTML/CSS/JS — no build step, no dependencies beyond Font Awesome (CDN).
+This is a **rules and workflow trainer**, not a realistic shoe simulator or gambling service. Card draws use a deliberately weighted rank pool to emphasize drawing-rule decisions; they do **not** model an eight-deck shoe, depletion, burn cards, or true hand frequencies. The card generator currently excludes Queens and Kings from random draws, although both have the same baccarat value as other ten-value cards. Do not use the resulting frequencies for house-edge, wagering, or statistical analysis.
+
+The commission module teaches conventional 5% Banker commission. Individual properties and jurisdictions may use different commission-free or side-bet rules. Verify local procedures before using this tool for formal training.
+
+## Privacy
+
+Training progress and missed hands are stored in your browser's localStorage. There is no application account or server-side training database. Clearing browser site data may erase progress.
+
+## Source and reuse
+
+The repository is publicly viewable. **No open-source license has yet been granted for the full repository.** Code and bundled card artwork must not be assumed to have the same reuse rights. Artwork provenance and redistribution permissions are pending verification before an open-source release.
+
+## Contributing
+
+Issues and suggestions are welcome. Before submitting a pull request, describe the behavior being changed and how you verified baccarat drawing-rule accuracy. Avoid adding third-party graphics or dependencies without recording their licenses.
+
+## Technical layout
+
+- `index.html` — dashboard
+- `disclaimer.html` — educational notice
+- `js/core/` — card generation, rules, statistics, UI, disclaimer gate
+- `guided/`, `dealing/`, `drill/`, `commission/` — training modules
+- `test/`, `audit/`, `review/`, `progress/` — assessment and review modules
+- `assets/` — SVG card artwork
+- `css/` — shared styling
+
+Built with plain HTML, CSS and JavaScript.
