@@ -1,0 +1,41 @@
+name: Validate release candidate
+
+on:
+  pull_request:
+    branches: [master]
+  push:
+    branches: [release/public-readiness]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate JavaScript syntax
+        run: |
+          find . -type f -name '*.js' -not -path './.git/*' -print0 | xargs -0 -n1 node --check
+          node --check tests/rules.test.cjs
+      - name: Test baccarat rules
+        run: node --test tests/rules.test.cjs
+      - name: Ensure removed card-back asset is not referenced
+        run: |
+          if grep -R -n -E 'card_back[.]svg' --include='*.js' --include='*.html' --include='*.css' .; then
+            echo 'Removed card-back asset is still referenced'
+            exit 1
+          fi
+      - name: Package browser preview
+        run: |
+          mkdir -p preview
+          cp -R index.html disclaimer.html assets audit commission css dealing drill guided js progress review test LICENSE README.md preview/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: baccarat-release-preview
+          path: preview/
+          retention-days: 14

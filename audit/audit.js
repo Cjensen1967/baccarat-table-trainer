@@ -186,7 +186,9 @@
     const opp = base.actualWinner === 'player' ? 'banker'
               : base.actualWinner === 'banker' ? 'player'
               : (Math.random() < 0.5 ? 'player' : 'banker');
-    const wrong = Math.random() < 0.82 ? opp : 'tie';
+    const wrong = base.actualWinner === 'tie'
+      ? opp
+      : (Math.random() < 0.82 ? opp : 'tie');
     return {
       ...base,
       declaredWinner: wrong,
