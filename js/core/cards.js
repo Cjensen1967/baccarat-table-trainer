@@ -24,10 +24,10 @@ const RANKS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K'];
  *   - Mid-range values 3–7 doubled: these trigger every Banker conditional rule
  *   - Naturals (8, 9) and low cards (A, 2) kept at 1× — still present
  *
- * Pool size: 14 entries.
- *   Value 0: 2/14 ≈ 14%  (was 4/13 ≈ 31%) — much less filler
- *   Values 3-7: 2/14 ≈ 14% each             — most rule coverage
- *   Values 1,2,8,9: 1/14 ≈ 7% each          — still reachable
+ * Pool size: 16 entries.
+ *   Value 0: 2/16 = 12.5%  (was 4/13 ≈ 31%) — much less filler
+ *   Values 3-7: 2/16 = 12.5% each             — most rule coverage
+ *   Values 1,2,8,9: 1/16 = 6.25% each          — still reachable
  */
 const RANK_POOL = [
   'T', 'J',    // value 0 — two court cards (halved from four)
@@ -79,8 +79,8 @@ class Card {
 }
 
 /**
- * Simple randomized card source. Pulls uniformly from a 52-card space
- * (suit + rank). No depletion tracking — intentional per project scope.
+ * Training-weighted randomized card source, with uniform suits and weighted
+ * ranks. No depletion tracking — intentional per project scope.
  */
 class Shoe {
   constructor() {

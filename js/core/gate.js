@@ -27,42 +27,16 @@
     return; // storage unavailable — allow through, never loop
   }
 
-  /* -- 2. Determine the "next" path relative to the project root.
-   *
-   * pathname examples (GitHub Pages / localhost):
-   *   /baccarat-table-trainer/                 → root, no file
-   *   /baccarat-table-trainer/index.html       → root, explicit file
-   *   /baccarat-table-trainer/drill/index.html → module page
-   *   /index.html                              → localhost root
-   *   /drill/index.html                        → localhost module
+  /* -- 2. Resolve the project root from this script's URL.
+   * Works at / on Vercel and under /baccarat-table-trainer/ on GitHub Pages.
    */
-  var pathname = window.location.pathname;
+  var root = new URL('../../', document.currentScript.src);
+  var relativePath = window.location.pathname.slice(root.pathname.length);
+  if (window.location.pathname === root.pathname.slice(0, -1)) relativePath = '';
+  if (relativePath.startsWith('/')) relativePath = relativePath.slice(1);
+  if (!relativePath || !relativePath.endsWith('.html')) relativePath += 'index.html';
 
-  // Get the directory portion (strip filename if present)
-  var dir = pathname.replace(/\/[^/]+\.html(\?.*)?$/, '').replace(/\/$/, '');
-  // e.g. '/baccarat-table-trainer' or '/baccarat-table-trainer/drill' or ''
-
-  var segments = dir.replace(/^\//, '').split('/').filter(Boolean);
-  // e.g. ['baccarat-table-trainer'] or ['baccarat-table-trainer', 'drill'] or []
-
-  // The first segment is the project base on GitHub Pages; empty on localhost root.
-  var basePath = (segments.length > 0 ? '/' + segments[0] : '') + '/';
-  // '/baccarat-table-trainer/' or '/'
-
-  // Filename: whatever .html file we're on (fallback to index.html)
-  var fileMatch = pathname.match(/\/([^/?#]+\.html)(\?|#|$)/);
-  var fileName  = fileMatch ? fileMatch[1] : 'index.html';
-
-  // Remaining segments after the project base = the module path
-  var moduleParts = segments.slice(1); // e.g. ['drill'] or []
-  var next = moduleParts.length > 0
-    ? moduleParts.join('/') + '/' + fileName
-    : fileName;
-  // 'drill/index.html' or 'index.html'
-
-  /* -- 3. Build absolute disclaimer URL and redirect */
-  var disclaimerUrl = window.location.origin + basePath
-    + 'disclaimer.html?next=' + encodeURIComponent(next);
-
-  window.location.replace(disclaimerUrl);
+  var disclaimerUrl = new URL('disclaimer.html', root);
+  disclaimerUrl.searchParams.set('next', relativePath);
+  window.location.replace(disclaimerUrl.href);
 })();
