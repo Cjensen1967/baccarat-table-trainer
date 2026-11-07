@@ -4,7 +4,7 @@ on:
   pull_request:
     branches: [master]
   push:
-    branches: [release/public-readiness]
+    branches: [master, 'maintenance/**']
   workflow_dispatch:
 
 permissions:
