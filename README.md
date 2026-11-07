@@ -37,7 +37,7 @@ Training progress and missed hands are stored in your browser's localStorage. Th
 
 ## Source and reuse
 
-The repository is publicly viewable. **No open-source license has yet been granted for the full repository.** Code and bundled card artwork must not be assumed to have the same reuse rights. Artwork provenance and redistribution permissions are pending verification before an open-source release.
+The application source code is available under the [MIT License](LICENSE), copyright (c) 2026 Cjensen1967. Card-face artwork originates from Byron Knoll's public-domain vector-playing-cards project (https://code.google.com/archive/p/vector-playing-cards/); the SVG files retain their original source comments. The unverified card-back SVG was removed. Third-party assets and services, including Font Awesome loaded from a CDN, remain subject to their own terms.
 
 ## Contributing
 
